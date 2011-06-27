@@ -7,10 +7,12 @@ package tileloader.controller.tasks
 	import flash.filesystem.FileStream;
 	
 	import mx.logging.ILogger;
+	import mx.utils.StringUtil;
 	
 	import org.spicefactory.lib.task.Task;
 	
 	import tileloader.log.LogUtils;
+	import tileloader.model.ApplicationConfig;
 	
 	/**
 	 * Loads local configuration file
@@ -60,16 +62,36 @@ package tileloader.controller.tasks
 			
 			stream.openAsync(_file, FileMode.READ);
 			
-		}
-		
-		/**
-		 * @private
-		 * File read complete handler 
-		 */
-		private function onFileComplete(event:Event):void {
-			if (null != _logger) {
-				_logger.info("Config file loaded.");
-			}
+			function onFileComplete(event:Event):void {
+				stream.removeEventListener(Event.COMPLETE, onFileComplete);
+				
+				var contents:String = stream.readUTFBytes(stream.bytesAvailable);
+				
+				try {
+					var content:XML = XML(contents);
+					var appConfig:ApplicationConfig = ApplicationConfig(data);
+					
+					var setupData:XMLList = content.TileLoader;
+					
+					appConfig.authURL = StringUtil.trim(setupData.authURL.toString());
+					appConfig.albumListURL = StringUtil.trim(setupData.albumListURL.toString());
+					appConfig.imageFormatConfigURL = StringUtil.trim(setupData.imageFormatConfigURL.toString());
+					appConfig.imageUploadURL = StringUtil.trim(setupData.imageUploadURL.toString());
+					
+					if (null != _logger) {
+						_logger.info("Config file loaded.");
+					}
+
+					complete();
+				} catch (e:Error) {
+					if (null != _logger) {
+						_logger.error("Invalid config file format.");
+					}
+					error("Invalid config file format.");
+				}
+				
+				stream.close();
+			}			
 		}
 		
 		/**

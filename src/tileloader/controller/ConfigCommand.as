@@ -9,6 +9,7 @@ package tileloader.controller
 	import org.spicefactory.lib.task.TaskGroup;
 	
 	import tileloader.controller.tasks.LoadConfigFileTask;
+	import tileloader.controller.tasks.LoadImageConfigTask;
 	import tileloader.log.LogUtils;
 	import tileloader.messages.ConfigMessage;
 	import tileloader.model.ApplicationConfig;
@@ -48,6 +49,9 @@ package tileloader.controller
 		
 			//Load local configuration file
 			result.addTask(new LoadConfigFileTask(File.applicationDirectory.resolvePath(CONFIG_FILE_NAME)));			
+			
+			//Load image format configuration
+			result.addTask(new LoadImageConfigTask());
 			
 			return result;
 		}
