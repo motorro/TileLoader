@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<TileLoader>
+		<authURL>
+			<![CDATA[
+				http://tiles/authenticate.php			
+			]]>
+		</authURL>
+		<albumListURL>
+			<![CDATA[
+				http://tiles/albumlist.php			
+			]]>
+		</albumListURL>
+		<imageFormatConfigURL>
+			<![CDATA[
+				http://tiles/imageformats.xml			
+			]]>
+		</imageFormatConfigURL>
+		<imageUploadURL>
+			<![CDATA[
+				http://tiles/upload.php			
+			]]>
+		</imageUploadURL>
+	</TileLoader>	
+</config>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   xmlns:parsley="http://www.spicefactory.org/parsley" 
+					   xmlns:log="tileloader.log.*"
+					   preinitialize="onPreinit();">
+	<fx:Script>
+		<![CDATA[
+			import mx.logging.Log;
+			
+			import tileloader.config.ApplicationContext;
+			import tileloader.model.SharedModel;
+			
+			[Bindable]
+			public var sharedModel:SharedModel;
+			
+			/**
+			 * @private
+			 * Preinitialization
+			 */
+			private function onPreinit():void {
+				Log.addTarget(logTarget);
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<log:ParsleyMessageLogTarget
+			id="logTarget"
+			includeDate="false"
+			includeTime="true"
+			includeCategory="true"
+			includeLevel="true">
+			<log:filters>
+				<fx:Array>
+					<fx:String>tileloader.*</fx:String>
+				</fx:Array>
+			</log:filters>
+		</log:ParsleyMessageLogTarget>
+
+		<parsley:ContextBuilder>
+			<parsley:FlexConfig type="{ApplicationContext}"/>
+			<parsley:TaskCommandSupport/>                    
+		</parsley:ContextBuilder>
+		
+		<parsley:Configure targets="{[logTarget]}"/>
+		
+		<parsley:FastInject property="sharedModel" type="{SharedModel}"/> 
+		
+	</fx:Declarations>
+</s:WindowedApplication>
