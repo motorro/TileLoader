@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
-					   xmlns:s="library://ns.adobe.com/flex/spark" 
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
-					   xmlns:parsley="http://www.spicefactory.org/parsley" 
+					   xmlns:parsley="http://www.spicefactory.org/parsley"
 					   xmlns:log="tileloader.log.*"
+					   xmlns:view="tileloader.view.*"
+					   width="422" height="450" 
+					   showStatusBar="false" 
 					   preinitialize="onPreinit();">
 	<fx:Script>
 		<![CDATA[
 			import mx.logging.Log;
 			
-			import tileloader.config.ApplicationContext;
+			import tileloader.context.ApplicationContext;
 			import tileloader.model.SharedModel;
 			
 			[Bindable]
-			public var sharedModel:SharedModel;
+			public var model:SharedModel;
 			
 			/**
 			 * @private
@@ -45,7 +48,11 @@
 		
 		<parsley:Configure targets="{[logTarget]}"/>
 		
-		<parsley:FastInject property="sharedModel" type="{SharedModel}"/> 
+		<parsley:FastInject property="model" type="{SharedModel}"/> 
 		
 	</fx:Declarations>
+	<view:DropZone left="10" right="10" top="10" bottom="40" contentBackgroundAlpha="0.6"
+				   contentBackgroundColor="#D2F0F9">
+	</view:DropZone>
+	<s:Button x="10" y="418" width="400" label="Upload"/>
 </s:WindowedApplication>
