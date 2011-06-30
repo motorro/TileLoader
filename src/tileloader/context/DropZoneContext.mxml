@@ -5,10 +5,14 @@
 	xmlns:model="tileloader.model.*">
 	<fx:Script>
 		<![CDATA[
+			import tileloader.controller.FileDropCommand;
 			import tileloader.model.DropZoneModel;
+			import tileloader.model.ThumbnailModel;
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<DynamicObject type="{DropZoneModel}"/>
+		<Object type="{DropZoneModel}"/>
+		<DynamicObject type="{ThumbnailModel}"/>
+		<DynamicCommand type="{FileDropCommand}" scope="local"/>
 	</fx:Declarations>
 </Objects>

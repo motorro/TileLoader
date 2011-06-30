@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:parsley="http://www.spicefactory.org/parsley">
+	<fx:Script>
+		<![CDATA[
+			import mx.graphics.BitmapScaleMode;
+			
+			import tileloader.model.ThumbnailModel;
+			import tileloader.model.VO.ImageVO;
+			
+			[Bindable]
+			/**
+			 * @private
+			 * Reference to presentation model
+			 */
+			public var model:ThumbnailModel;
+			
+			/**
+			 * @private
+			 * Data set flag
+			 */
+			private var _dataSet:Boolean;
+			
+			/**
+			 * @inheritDoc
+			 */
+			override public function set data(value:Object):void {
+				if (super.data === value) return;
+
+				super.data = value;
+				
+				_dataSet = true;
+				invalidateProperties();
+			}
+			
+			/**
+			 * Updates model upon data changes
+			 */
+			private function updateModel():void {
+				if (null == model) return;
+				model.setImageVO(data as ImageVO);
+			}
+			
+			/**
+			 * @inheritDoc
+			 */
+			override protected function commitProperties():void {
+				super.commitProperties();
+				
+				if (_dataSet) {
+					updateModel();
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<parsley:FastInject property="model" type="{ThumbnailModel}" injectionComplete="updateModel()"/> 
+	</fx:Declarations>
+	<s:Image x="0" y="0" width="45" height="45" scaleMode="{BitmapScaleMode.STRETCH}" source="{model.thumbnail}"/>
+</s:ItemRenderer>

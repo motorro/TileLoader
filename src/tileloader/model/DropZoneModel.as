@@ -8,6 +8,7 @@ package tileloader.model
 	import mx.managers.DragManager;
 	
 	import tileloader.log.LogUtils;
+	import tileloader.messages.FileDropMesage;
 
 	/**
 	 * Drop zone presentation model
@@ -24,6 +25,7 @@ package tileloader.model
 		private static const _logger:ILogger = LogUtils.getLoggerByClass(DropZoneModel);
 
 		[Inject]
+		[Bindable]
 		/**
 		 * Shared model reference 
 		 */
@@ -56,9 +58,13 @@ package tileloader.model
 				return;
 			}
 			
+			var files:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+			
 			if (null != _logger) {
-				_logger.info("Files dropped");	
+				_logger.info("Files dropped: " + files.length);	
 			}
+			
+			sendMessage(new FileDropMesage(files));
 		}
 	}
 }

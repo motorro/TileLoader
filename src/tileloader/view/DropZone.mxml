@@ -58,6 +58,12 @@
 		<parsley:FastInject property="model" type="{DropZoneModel}"/> 
 
 	</fx:Declarations>
-	<s:List id="list" left="0" right="0" top="0" bottom="0">
+	<s:List id="list" 
+			left="0" right="0" top="0" bottom="0" 
+			itemRenderer="tileloader.view.Thumbnail" 
+			dataProvider="{model.sharedModel.fileList}">
+		<s:layout>
+			<s:TileLayout/>
+		</s:layout>
 	</s:List>
 </s:Group>

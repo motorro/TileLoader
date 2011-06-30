@@ -33,19 +33,17 @@ package tileloader.controller
 		[Inject]
 		/**
 		 * @private
-		 * Model reference 
+		 * Config reference 
 		 */
-		public var model:SharedModel;
+		public var config:ApplicationConfig;
 		
 		/**
 		 * Execution method 
 		 */
 		public function execute(message:ConfigMessage):Task {
-			//Create configuration section
-			model.applicationConfig = new ApplicationConfig();
 			
 			var result:TaskGroup = new SequentialTaskGroup("Configuration");	
-			result.data = model.applicationConfig;
+			result.data = config;
 		
 			//Load local configuration file
 			result.addTask(new LoadConfigFileTask(File.applicationDirectory.resolvePath(CONFIG_FILE_NAME)));			

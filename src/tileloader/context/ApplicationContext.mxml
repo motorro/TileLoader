@@ -7,13 +7,16 @@
 		<![CDATA[
 			import tileloader.controller.ConfigCommand;
 			import tileloader.controller.ExitCommand;
+			import tileloader.controller.FileAddCommand;
 			import tileloader.controller.LogMessageCommand;
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<model:SharedModel/>
+		<model:ApplicationConfig/>
 		<DynamicCommand	type="{LogMessageCommand}"/>
 		<DynamicCommand	type="{ConfigCommand}"/>
 		<DynamicCommand	type="{ExitCommand}"/>
+		<DynamicCommand type="{FileAddCommand}"/>
 	</fx:Declarations>
 </Objects>

@@ -44,6 +44,10 @@ package tileloader.controller.tasks
 		override protected function doStart():void {
 			var appConfig:ApplicationConfig = ApplicationConfig(data);
 			
+			//Reset data
+			appConfig.imageFormats = null;
+			appConfig.thumbnailFormat = null;
+			
 			if (null != _logger) {
 				_logger.info("Loading image configuration: " + appConfig.imageFormatConfigURL);
 			}
@@ -74,14 +78,37 @@ package tileloader.controller.tasks
 					var i:int = imageData.length();
 					while (--i >= 0) {
 						var formatData:XML = imageData[i];
-						imageConfig[i] = new ImageFormatVO(formatData.@id.toString(), int(formatData.@width.toString()), int(formatData.@height.toString()), formatData.@fit.toString());
+						
+						var isThumbnail:Boolean = false;
+						var thumbnailData:XMLList = formatData.@thumbnail;
+						if (0 != thumbnailData.length()) {
+							var s:String = thumbnailData.toString().toLowerCase();
+							if ("true" == s || "1" == s) {
+								isThumbnail = true;
+							}
+						}
+						
+						var format:ImageFormatVO = new ImageFormatVO(formatData.@id.toString(), int(formatData.@width.toString()), int(formatData.@height.toString()), formatData.@fit.toString());
+						imageConfig[i] = format;
+						if (isThumbnail) {
+							appConfig.thumbnailFormat = format;
+						}
 					}
 					
 					//Sort formats from biggest to smaller to optimize resize later
 					//Use pixel count as a sort parameter
-					appConfig.imageFormats = imageConfig.sort(function (format1:ImageFormatVO, format2:ImageFormatVO):Number {
+					imageConfig = imageConfig.sort(function (format1:ImageFormatVO, format2:ImageFormatVO):Number {
 						return format2.targetWidth * format2.targetHeight - format1.targetWidth * format1.targetHeight;						
 					});
+					
+					//If no format set as thumbnail explicitly - choose smallest
+					if (null == appConfig.thumbnailFormat) {
+						appConfig.thumbnailFormat = imageConfig[imageConfig.length - 1];
+					}
+					
+					//Sort formats from biggest to smaller to optimize resize later
+					//Use pixel count as a sort parameter
+					appConfig.imageFormats = imageConfig;
 					
 					if (null != _logger) {
 						_logger.info("Image config loaded.");

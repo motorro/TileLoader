@@ -31,6 +31,11 @@ package tileloader.model
 		public var imageFormats:Vector.<ImageFormatVO>;
 		
 		/**
+		 * Reference to image format that is used as thumbnail 
+		 */
+		public var thumbnailFormat:ImageFormatVO;
+		
+		/**
 		 * Image upload script URL 
 		 */
 		public var imageUploadURL:String;

@@ -2,6 +2,7 @@ package tileloader.model
 {
 	import flash.events.ErrorEvent;
 	
+	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
 	import mx.events.CloseEvent;
 	import mx.logging.ILogger;
@@ -34,10 +35,11 @@ package tileloader.model
 		 */
 		public var initialized:Boolean;
 		
+		[Bindable]
 		/**
-		 * Application configuration 
+		 * Files to be processed with application 
 		 */
-		public var applicationConfig:ApplicationConfig;
+		public var fileList:ArrayCollection;
 		
 		//Logging
 		/**
