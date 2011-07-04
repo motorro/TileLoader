@@ -3,12 +3,15 @@ package tileloader.controller.tasks
 	import flash.filesystem.File;
 	
 	import mx.collections.ArrayCollection;
+	import mx.core.IUID;
 	import mx.logging.ILogger;
 	
 	import org.spicefactory.lib.task.Task;
 	
 	import tileloader.log.LogUtils;
 	import tileloader.model.VO.ImageVO;
+	
+	import utils.MD5;
 	
 	public class AddFileTask extends Task {
 		/**
@@ -59,10 +62,11 @@ package tileloader.controller.tasks
 				if (null != _logger) {
 					_logger.warn(message);
 				}
-				error(message);
+				complete();
 				return;
 			}
 			
+			//Check for correct extention
 			var nativePath:String = _file.nativePath;
 			var extention:String = nativePath.substr(nativePath.lastIndexOf(".") + 1).toLowerCase();
 			if (ALLOWED_EXTENTIONS.indexOf(extention) < 0) {
@@ -70,13 +74,26 @@ package tileloader.controller.tasks
 				if (null != _logger) {
 					_logger.warn(message);
 				}
-				error(message);
+				complete();
 				return;
 			}
 			
-			//TODO: Check for duplicates
+			var fileUID:String = MD5.encrypt(_file.nativePath);
 			
-			var image:ImageVO = new ImageVO(_file);
+			//Check for duplicates
+			var files:Array = ArrayCollection(data).source;
+			var i:int = files.length;
+			while (--i >= 0) {
+				if (IUID(files[i]).uid == fileUID) {
+					if (null != _logger) {
+						_logger.info("Duplicate file queue. Skipping...");
+					}
+					complete();
+					return;
+				}
+			}
+			
+			var image:ImageVO = new ImageVO(_file, fileUID);
 			ArrayCollection(data).addItem(image);
 			
 			complete();

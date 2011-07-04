@@ -33,6 +33,11 @@ package tileloader.controller.tasks
 		public function AuthenticateTask(order:String) {
 			super();
 			_order = order;
+			
+			setCancelable(false);
+			setSkippable(false);
+			setSuspendable(false);
+			setRestartable(false);
 		}
 		
 		/**

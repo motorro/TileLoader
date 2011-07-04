@@ -14,7 +14,9 @@ package tileloader.model
 	import tileloader.messages.ConfigResultMessage;
 	import tileloader.messages.ExitMessage;
 	import tileloader.messages.ExitMessages;
+	import tileloader.messages.FileAddMessage;
 	import tileloader.messages.OrderCleanupMessage;
+	import tileloader.messages.RescanFileQueueMessage;
 
 	[ResourceBundle("messages")]
 	/**
@@ -107,5 +109,13 @@ package tileloader.model
 			Alert.show(rm.getString("messages", "configError", [fault.text]), rm.getString("messages", 'configErrorTitle'), Alert.OK, null, listener);
 		}
 		
+		[CommandComplete]
+		/**
+		 * @private 
+		 * File added handler
+		 */
+		public function onFileAdded(message:FileAddMessage):void {
+			sendMessage(new RescanFileQueueMessage());			
+		}
 	}
 }

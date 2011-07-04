@@ -35,6 +35,11 @@ package tileloader.controller.tasks
 		public function CreateOrderFolderTask(baseFolder:File) {
 			super();
 			_baseFolder = baseFolder;
+			
+			setCancelable(false);
+			setSkippable(false);
+			setSuspendable(false);
+			setRestartable(false);
 		}
 		
 		/**

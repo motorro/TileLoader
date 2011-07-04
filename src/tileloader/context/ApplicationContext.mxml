@@ -11,17 +11,22 @@
 			import tileloader.controller.FileAddCommand;
 			import tileloader.controller.LogMessageCommand;
 			import tileloader.controller.OrderCleanupCommand;
+			import tileloader.controller.RescanFileQueueCommand;
+			import tileloader.controller.ResizeImageCommand;
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<model:SharedModel/>
 		<model:ApplicationConfig/>
 		<model:AuthenticationModel/>
+		<model:ResizerModel/>
 		<DynamicCommand	type="{LogMessageCommand}"/>
 		<DynamicCommand	type="{ConfigCommand}"/>
 		<DynamicCommand	type="{ExitCommand}"/>
 		<DynamicCommand type="{FileAddCommand}"/>
 		<DynamicCommand type="{OrderCleanupCommand}"/>
 		<DynamicCommand type="{AuthenticateCommand}"/>
+		<DynamicCommand type="{RescanFileQueueCommand}"/>
+		<DynamicCommand type="{ResizeImageCommand}"/>
 	</fx:Declarations>
 </Objects>
