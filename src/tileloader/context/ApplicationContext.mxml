@@ -5,18 +5,23 @@
 	xmlns:model="tileloader.model.*">
 	<fx:Script>
 		<![CDATA[
+			import tileloader.controller.AuthenticateCommand;
 			import tileloader.controller.ConfigCommand;
 			import tileloader.controller.ExitCommand;
 			import tileloader.controller.FileAddCommand;
 			import tileloader.controller.LogMessageCommand;
+			import tileloader.controller.OrderCleanupCommand;
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<model:SharedModel/>
 		<model:ApplicationConfig/>
+		<model:AuthenticationModel/>
 		<DynamicCommand	type="{LogMessageCommand}"/>
 		<DynamicCommand	type="{ConfigCommand}"/>
 		<DynamicCommand	type="{ExitCommand}"/>
 		<DynamicCommand type="{FileAddCommand}"/>
+		<DynamicCommand type="{OrderCleanupCommand}"/>
+		<DynamicCommand type="{AuthenticateCommand}"/>
 	</fx:Declarations>
 </Objects>

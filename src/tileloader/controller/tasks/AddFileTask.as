@@ -74,6 +74,8 @@ package tileloader.controller.tasks
 				return;
 			}
 			
+			//TODO: Check for duplicates
+			
 			var image:ImageVO = new ImageVO(_file);
 			ArrayCollection(data).addItem(image);
 			

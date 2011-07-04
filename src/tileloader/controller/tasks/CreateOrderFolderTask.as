@@ -1,0 +1,69 @@
+package tileloader.controller.tasks
+{
+	import flash.filesystem.File;
+	
+	import mx.logging.ILogger;
+	
+	import org.spicefactory.lib.task.Task;
+	
+	import tileloader.log.LogUtils;
+	import tileloader.model.AuthenticationModel;
+	
+	/**
+	 * Creates order temp directory
+	 *  
+	 * @author kochetkov
+	 * 
+	 */
+	public class CreateOrderFolderTask extends Task {
+		/**
+		 * @private
+		 * Logger 
+		 */
+		private static var _logger:ILogger = LogUtils.getLoggerByClass(CreateOrderFolderTask);
+		
+		/**
+		 * @private
+		 * Folder path storage 
+		 */
+		private var _baseFolder:File;
+		
+		/**
+		 * Constructor 
+		 * @param order Folder to create
+		 */
+		public function CreateOrderFolderTask(baseFolder:File) {
+			super();
+			_baseFolder = baseFolder;
+		}
+		
+		/**
+		 * @inheritDoc 
+		 */
+		override protected function doStart():void {
+			
+			var orderSubDir:String = AuthenticationModel(data).orderToken;
+			
+			var dir:File = _baseFolder.resolvePath(orderSubDir);
+			
+			if (null != _logger) {
+				_logger.info("Creating folder: " + dir.nativePath);
+			}
+			
+			try {
+				dir.createDirectory();
+				if (null != _logger) {
+					_logger.info("Created.");
+				}
+				complete();
+			} catch (e:Error) {
+				var message:String = "Error creating order directory: " + e.message;
+				if (null != _logger) {
+					_logger.error(message);
+				}
+				error(message);
+			}
+			
+		}
+	}
+}

@@ -13,6 +13,7 @@ package tileloader.controller
 	import tileloader.log.LogUtils;
 	import tileloader.messages.ConfigMessage;
 	import tileloader.model.ApplicationConfig;
+	import tileloader.model.GlobalConstants;
 	import tileloader.model.SharedModel;
 
 	/**
@@ -23,12 +24,6 @@ package tileloader.controller
 	 * 
 	 */
 	public class ConfigCommand {
-		
-		/**
-		 * @private
-		 * Configuration file name 
-		 */
-		private static const CONFIG_FILE_NAME:String = "config.xml";
 		
 		[Inject]
 		/**
@@ -46,7 +41,7 @@ package tileloader.controller
 			result.data = config;
 		
 			//Load local configuration file
-			result.addTask(new LoadConfigFileTask(File.applicationDirectory.resolvePath(CONFIG_FILE_NAME)));			
+			result.addTask(new LoadConfigFileTask(File.applicationDirectory.resolvePath(GlobalConstants.CONFIG_FILE_NAME)));			
 			
 			//Load image format configuration
 			result.addTask(new LoadImageConfigTask());

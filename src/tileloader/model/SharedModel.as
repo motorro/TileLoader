@@ -11,8 +11,10 @@ package tileloader.model
 	
 	import tileloader.log.LogUtils;
 	import tileloader.messages.ConfigMessage;
+	import tileloader.messages.ConfigResultMessage;
 	import tileloader.messages.ExitMessage;
 	import tileloader.messages.ExitMessages;
+	import tileloader.messages.OrderCleanupMessage;
 
 	[ResourceBundle("messages")]
 	/**
@@ -77,6 +79,7 @@ package tileloader.model
 			if (null != _logger) {
 				_logger.info("Application configured");
 			}
+			sendMessage(new ConfigResultMessage(ConfigResultMessage.CONFIG_COMPLETE));
 			initialized = true;
 		}
 		
@@ -88,7 +91,7 @@ package tileloader.model
 		public function onConfigError(fault:ErrorEvent, message:ConfigMessage):void {
 			var listener:Function = function(event:CloseEvent):void {
 				if (null == event || Alert.OK == event.detail) {
-					//Log
+					//TODO: Log output
 					sendMessage(new ExitMessage(ExitMessages.CONFIG_ERROR));
 					return;
 				} 
@@ -97,6 +100,7 @@ package tileloader.model
 			if (null != _logger) {
 				_logger.error("Configuration error: " + fault.text);
 			}
+			sendMessage(new ConfigResultMessage(ConfigResultMessage.CONFIG_FAILED));
 			
 			var rm:IResourceManager = ResourceManager.getInstance();
 			
