@@ -1,4 +1,4 @@
-package tileloader.model
+package tileloader.resize
 {
 	/**
 	 * Image fit types

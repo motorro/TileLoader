@@ -38,7 +38,6 @@ package tileloader.controller
 			result.data = model;
 			
 			//TODO: Order cleanup code here
-
 			
 			var tempFolder:File = File.applicationStorageDirectory.resolvePath(model.orderToken);
 			result.addTask(new FolderCleanupTask(tempFolder));

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   width="726" height="335">
+	<fx:Script>
+		<![CDATA[
+			import tileloader.resize.BenderImageResizer;
+			import tileloader.resize.ImageFitType;
+			import tileloader.resize.ResizeJob;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:ArrayList id="fitData">
+			<fx:Object label="IMAGE" data="{ImageFitType.FIT_IMAGE}"/>
+			<fx:Object label="WINDOW" data="{ImageFitType.FIT_WINDOW}"/>
+		</s:ArrayList>
+	</fx:Declarations>
+	<s:Image id="source" x="10" y="10" width="403" height="313"
+			 source="@Embed('../assets/Jellyfish.jpg')"/>
+	<s:TextInput id="w" x="421" y="10" text="180"/>
+	<s:TextInput id="h" x="421" y="40" text="180"/>
+	<s:ComboBox id="scale" x="421" y="70" width="128" dataProvider="{fitData}" selectedIndex="0"/>
+	<s:Button x="421" y="101" label="Button">
+		<s:click>
+			<![CDATA[
+				var job:ResizeJob = BenderImageResizer.resize(source.bitmapData, Number(w.text), Number(h.text), scale.selectedItem.data);
+				trace ("Resizing to: " + job.output.width + "x" + job.output.height);
+				result.source = new Bitmap(job.output);
+				job.job.start(true);
+			]]>
+		</s:click>
+	</s:Button>
+	<s:Image id="result" x="421" y="130" width="180" height="180" scaleMode="letterbox" fillMode="clip"/>
+</s:WindowedApplication>

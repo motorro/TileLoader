@@ -1,0 +1,29 @@
+<languageVersion : 1.0;>
+
+kernel BilinearResample
+<   namespace : "com.brooksandrus.pixelbender";
+    vendor : "motorro";
+    version : 1;
+>
+{
+    parameter float scale
+    <
+        minValue: 0.0;
+        maxValue: 1000.0;
+        defaultValue: 1.0;
+    >;
+    
+    parameter float2 shift
+    <
+        defaultValue:float2(0.0,0.0);
+    >;
+    
+    input image4 src;
+    output pixel4 dst;
+
+    void
+    evaluatePixel()
+    {
+        dst = sampleLinear( src, outCoord() * scale + shift );
+    }
+}

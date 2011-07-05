@@ -79,6 +79,7 @@ package tileloader.controller.tasks
 				if (null != _logger) {
 					_logger.info("Image loaded.");
 				}
+				_loader.unload();
 				complete();
 			} catch (e:Error) {
 				var message:String = "Error loading image: " + e.message;

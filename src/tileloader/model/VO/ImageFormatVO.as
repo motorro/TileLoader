@@ -1,6 +1,6 @@
 package tileloader.model.VO
 {
-	import tileloader.model.ImageFitType;
+	import tileloader.resize.ImageFitType;
 
 	/**
 	 * Stores image format parameters

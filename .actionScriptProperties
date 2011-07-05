@@ -19,6 +19,9 @@
     <application path="TileLoader.mxml">
       <airExcludes/>
     </application>
+    <application path="ResizeTest.mxml">
+      <airExcludes/>
+    </application>
   </applications>
   <modules/>
   <buildCSSFiles/>
