@@ -60,6 +60,7 @@ package tileloader.controller.tasks
 				if (null != _logger) {
 					_logger.info("Created.");
 				}
+				AuthenticationModel(data).orderDirectory = dir;
 				complete();
 			} catch (e:Error) {
 				var message:String = "Error creating order directory: " + e.message;

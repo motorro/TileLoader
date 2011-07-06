@@ -77,7 +77,7 @@ package tileloader.model
 		 */
 		private function onImageResizeComplete(event:ImageEvent):void {
 			//Watch when thumbnail format becomes available and set icon
-			if (config.thumbnailFormat !== event.imageFormat) return;
+			if (config.thumbnailFormat.id != event.imageFormat.id) return;
 			
 			thumbnail = ImageFormatFileVO(imageVO.formats[config.thumbnailFormat]).file.nativePath;
 		}

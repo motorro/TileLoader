@@ -5,6 +5,8 @@
 					   width="726" height="335">
 	<fx:Script>
 		<![CDATA[
+			import cmodule.aircall.CLibInit;
+			
 			import tileloader.resize.BenderImageResizer;
 			import tileloader.resize.ImageFitType;
 			import tileloader.resize.ResizeJob;
@@ -21,7 +23,7 @@
 	<s:TextInput id="w" x="421" y="10" text="180"/>
 	<s:TextInput id="h" x="421" y="40" text="180"/>
 	<s:ComboBox id="scale" x="421" y="70" width="128" dataProvider="{fitData}" selectedIndex="0"/>
-	<s:Button x="421" y="101" label="Button">
+	<s:Button x="421" y="101" label="resize">
 		<s:click>
 			<![CDATA[
 				var job:ResizeJob = BenderImageResizer.resize(source.bitmapData, Number(w.text), Number(h.text), scale.selectedItem.data);
@@ -32,4 +34,28 @@
 		</s:click>
 	</s:Button>
 	<s:Image id="result" x="421" y="130" width="180" height="180" scaleMode="letterbox" fillMode="clip"/>
+	<s:Button x="499" y="101" label="save">
+		<s:click>
+			<![CDATA[
+				var libInit:CLibInit = new CLibInit();
+				var jpeginit:Object = libInit.init();
+			
+				var origBmp:BitmapData = Bitmap(result.source).bitmapData;
+				var imgData:ByteArray = origBmp.getPixels(origBmp.rect);
+				var resData:ByteArray = new ByteArray();
+				imgData.position = 0;
+				
+				var encodeComplete:Function = function():void {
+					trace("COMPLETE");
+					var file:File = File.applicationStorageDirectory.resolvePath("img.jpg");
+					var fs:FileStream = new FileStream();
+					fs.open(file, FileMode.WRITE);
+					fs.writeBytes(resData, 0, resData.length);
+					fs.close();
+				}
+			
+				jpeginit.encodeAsync(encodeComplete, imgData, resData, int(w.text), int(h.text), 100, 10);
+			]]>
+		</s:click>
+	</s:Button>
 </s:WindowedApplication>

@@ -1,6 +1,7 @@
 package tileloader.model
 {
 	import flash.events.ErrorEvent;
+	import flash.filesystem.File;
 	
 	import mx.controls.Alert;
 	import mx.events.CloseEvent;
@@ -43,6 +44,11 @@ package tileloader.model
 		 */
 		public var orderToken:String = "-=ORDER=-";
 		
+		/**
+		 * Order temporary directory 
+		 */
+		public var orderDirectory:File;
+		
 		[MessageDispatcher]
 		/**
 		 * @private
@@ -65,22 +71,6 @@ package tileloader.model
 			sendMessage(new OrderCleanupMessage(orderToken));			
 		}
 
-		[CommandComplete]
-		/**
-		 * @private 
-		 * Cleanup complete handler
-		 */
-		public function onCleanupComplete(message:OrderCleanupMessage):void {
-			if (null != _logger) {
-				_logger.info("Clean");
-			}
-			sendMessage(new AuthResultMessage(AuthResultMessage.AUTH_REMOVED));
-			authenticated = false;
-			
-			//Authenticate
-			sendMessage(new AuthenticateMessage("-=ORDER=-"));
-		}
-		
 		[CommandError]
 		/**
 		 * @private 
@@ -104,6 +94,22 @@ package tileloader.model
 			Alert.show(rm.getString("messages", "removeFolderError", [fault.text]), rm.getString("messages", 'removeFolderErrorTitle'), Alert.YES | Alert.NO, null, listener);
 		}
 		
+		[CommandComplete]
+		/**
+		 * @private 
+		 * Cleanup complete handler
+		 */
+		public function onCleanupComplete(message:OrderCleanupMessage):void {
+			if (null != _logger) {
+				_logger.info("Clean");
+			}
+			sendMessage(new AuthResultMessage(AuthResultMessage.AUTH_REMOVED));
+			authenticated = false;
+			
+			//Authenticate
+			sendMessage(new AuthenticateMessage("-=ORDER=-"));
+		}
+
 		[CommandComplete]
 		/**
 		 * @private 

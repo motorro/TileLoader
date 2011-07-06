@@ -1,6 +1,8 @@
 package tileloader.model
 {
-	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Loader;
+	import flash.utils.ByteArray;
 	
 	import tileloader.model.VO.ImageVO;
 
@@ -24,6 +26,16 @@ package tileloader.model
 		/**
 		 * Original image BitmapData storage 
 		 */
-		public var original:Bitmap;
+		public var original:Loader;
+		
+		/**
+		 * Output bitmap data storage 
+		 */
+		public var output:BitmapData;
+		
+		/**
+		 * Reference to encoded image 
+		 */
+		public var encoded:ByteArray;
 	}
 }

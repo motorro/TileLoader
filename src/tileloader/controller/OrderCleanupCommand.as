@@ -7,6 +7,7 @@ package tileloader.controller
 	import org.spicefactory.lib.task.TaskGroup;
 	
 	import tileloader.controller.tasks.FolderCleanupTask;
+	import tileloader.controller.tasks.OrderDataCleanupTask;
 	import tileloader.messages.OrderCleanupMessage;
 	import tileloader.model.AuthenticationModel;
 	import tileloader.model.GlobalConstants;
@@ -41,6 +42,7 @@ package tileloader.controller
 			
 			var tempFolder:File = File.applicationStorageDirectory.resolvePath(model.orderToken);
 			result.addTask(new FolderCleanupTask(tempFolder));
+			result.addTask(new OrderDataCleanupTask());
 			
 			return result;
 		}

@@ -35,11 +35,6 @@ package tileloader.controller.tasks
 		private var _file:File;
 		
 		/**
-		 * Image loader 
-		 */
-		private var _loader:Loader;
-		
-		/**
 		 * Constructor 
 		 * @param file File to load
 		 */
@@ -61,11 +56,16 @@ package tileloader.controller.tasks
 				_logger.info("Loading image: " + _file.nativePath);
 			}
 			
-			_loader = new Loader();
-			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
-			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
+			var model:ResizerModel = ResizerModel(data);
+			var loader:Loader = model.original;
+			if (null == loader) {
+				model.original = loader = new Loader();
+			}
 			
-			_loader.load(new URLRequest(_file.url));
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
+			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
+			
+			loader.load(new URLRequest(_file.url));
 		}
 		
 		/**
@@ -73,21 +73,11 @@ package tileloader.controller.tasks
 		 * Image loaded handler 
 		 */
 		private function onComplete(event:Event):void {
-			//Clone bitmap
-			try {
-				ResizerModel(data).original = new Bitmap(Bitmap(_loader.content).bitmapData.clone());
-				if (null != _logger) {
-					_logger.info("Image loaded.");
-				}
-				_loader.unload();
-				complete();
-			} catch (e:Error) {
-				var message:String = "Error loading image: " + e.message;
-				if (null != _logger) {
-					_logger.error(message);
-				}
-				error(message);
+			if (null != _logger) {
+				_logger.info("Image loaded.");
 			}
+			unsubscribeLoaderEvents();
+			complete();
 		}
 		
 		/**
@@ -99,7 +89,18 @@ package tileloader.controller.tasks
 			if (null != _logger) {
 				_logger.error(message);
 			}
+			unsubscribeLoaderEvents();
 			error(message);
+		}
+		
+		/**
+		 * @private 
+		 * Removes loader event listeners
+		 */
+		private function unsubscribeLoaderEvents():void {
+			var loader:Loader = ResizerModel(data).original;
+			loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onComplete);
+			loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onError);
 		}
 	}
 }

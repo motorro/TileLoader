@@ -83,6 +83,7 @@ package tileloader.controller.tasks
 			if (null != _logger) {
 				_logger.info("Folder removed.");
 			}
+			removeFolderListeners();
 			complete();
 		}
 		
@@ -94,7 +95,17 @@ package tileloader.controller.tasks
 			if (null != _logger) {
 				_logger.error("Error removing folder: " + event.text);
 			}
+			removeFolderListeners();
 			error(event.text);
+		}
+		
+		/**
+		 * @private 
+		 * Removes event listeners from folder object
+		 */
+		private function removeFolderListeners():void {
+			_folder.removeEventListener(Event.COMPLETE, onComplete);
+			_folder.removeEventListener(IOErrorEvent.IO_ERROR, onError);
 		}
 	}
 }
