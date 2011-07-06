@@ -26,12 +26,6 @@ package tileloader.controller.tasks
 		 */
 		private static var _logger:ILogger = LogUtils.getLoggerByClass(ImageEncodeTask);
 		
-		/**
-		 * @private
-		 * Encoder reference 
-		 */
-		private var _encoder:Object;
-
 		public function ImageEncodeTask() {
 			super();
 			setCancelable(false);
@@ -51,9 +45,11 @@ package tileloader.controller.tasks
 			}
 			
 			try {
-				//Init library
-				var libInit:CLibInit = new CLibInit();
-				_encoder = libInit.init();
+				if (null == model.encoder) {
+					//Init library
+					var libInit:CLibInit = new CLibInit();
+					model.encoder = libInit.init();
+				}
 
 				//Create output array
 				model.encoded = new ByteArray();
@@ -64,7 +60,7 @@ package tileloader.controller.tasks
 				var input:ByteArray = inputBitmap.getPixels(inputBitmap.rect);
 				input.position = 0;
 
-				_encoder.encodeAsync(onEncodeComplete, input, model.encoded, inputBitmap.width, inputBitmap.height, 100, 20);
+				model.encoder.encodeAsync(onEncodeComplete, input, model.encoded, inputBitmap.width, inputBitmap.height, 100, 20);
 			} catch (e:Error) {
 				var message:String = "Error encoding image: " + e.message;
 				if (null != _logger) {

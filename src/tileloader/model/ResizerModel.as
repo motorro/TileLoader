@@ -38,5 +38,11 @@ package tileloader.model
 		 */
 		public var encoded:ByteArray;
 		
+		/**
+		 * @private
+		 * Strage for Alchemy encoder  
+		 */
+		public var encoder:Object;
+		
 	}
 }
