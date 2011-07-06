@@ -17,6 +17,7 @@ package tileloader.model
 	import tileloader.messages.FileAddMessage;
 	import tileloader.messages.OrderCleanupMessage;
 	import tileloader.messages.RescanFileQueueMessage;
+	import tileloader.messages.ResizeImageMessage;
 
 	[ResourceBundle("messages")]
 	/**
@@ -115,6 +116,15 @@ package tileloader.model
 		 * File added handler
 		 */
 		public function onFileAdded(message:FileAddMessage):void {
+			sendMessage(new RescanFileQueueMessage());			
+		}
+
+		[CommandComplete]
+		/**
+		 * @private 
+		 * File resize complete handler
+		 */
+		public function onFileResized(message:ResizeImageMessage):void {
 			sendMessage(new RescanFileQueueMessage());			
 		}
 	}

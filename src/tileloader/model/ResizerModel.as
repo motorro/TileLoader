@@ -14,8 +14,8 @@ package tileloader.model
 	 */
 	public class ResizerModel {
 		[Bindable]
+		[CommandStatus(type="tileloader.controller.ResizeImageCommand")]
 		public var working:Boolean; 
-		//[CommandStatus(type="fmsdm.messages.UserConnectionMessage")]
 		
 		[Bindable]
 		/**
@@ -37,5 +37,6 @@ package tileloader.model
 		 * Reference to encoded image 
 		 */
 		public var encoded:ByteArray;
+		
 	}
 }

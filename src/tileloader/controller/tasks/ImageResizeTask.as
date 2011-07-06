@@ -110,6 +110,10 @@ package tileloader.controller.tasks
 			
 			_job.job.removeEventListener(ShaderEvent.COMPLETE, onComplete);
 			
+			if (null != ResizerModel(data).output) {
+				ResizerModel(data).output.dispose();
+			}
+			
 			ResizerModel(data).output = _job.output;
 			
 			complete();
