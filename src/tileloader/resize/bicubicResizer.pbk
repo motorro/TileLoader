@@ -1,0 +1,78 @@
+<languageVersion : 1.0;>
+
+kernel bicubicResampling
+<   namespace : "net.onthewings.filters";
+    vendor : "Andy Li";
+    version : 2;
+    description : "Bicubic resampling.";
+>
+{
+    parameter float2 scale
+    <
+        defaultValue: float2(0.02,0.02);
+    >;
+	
+    parameter float2 shift
+    <
+        defaultValue:float2(0.0,0.0);
+    >;
+
+
+    input image4 src;
+    output pixel4 dst;
+
+    void
+    evaluatePixel()
+    {
+        float2 scaledPt = outCoord() * scale + shift - float2(0.5,0.5);
+        float2 pt = floor(scaledPt);
+        
+        //http://www.paulinternet.nl/?page=bicubic
+        float4 p00 = sampleNearest(src,pt+float2(-1.0,-1.0));
+        float4 p01 = sampleNearest(src,pt+float2(-1.0,0.0));
+        float4 p02 = sampleNearest(src,pt+float2(-1.0,1.0));
+        float4 p03 = sampleNearest(src,pt+float2(-1.0,2.0));
+        float4 p10 = sampleNearest(src,pt+float2(0.0,-1.0));
+		float4 p11 = sampleNearest(src,pt);
+		float4 p12 = sampleNearest(src,pt+float2(0.0,1.0));
+		float4 p13 = sampleNearest(src,pt+float2(0.0,2.0));
+        float4 p20 = sampleNearest(src,pt+float2(1.0,-1.0));
+        float4 p21 = sampleNearest(src,pt+float2(1.0,0.0));
+        float4 p22 = sampleNearest(src,pt+float2(1.0,1.0));
+        float4 p23 = sampleNearest(src,pt+float2(1.0,2.0));
+        float4 p30 = sampleNearest(src,pt+float2(2.0,-1.0));
+        float4 p31 = sampleNearest(src,pt+float2(2.0,0.0));
+        float4 p32 = sampleNearest(src,pt+float2(2.0,1.0));
+        float4 p33 = sampleNearest(src,pt+float2(2.0,2.0));
+        float x = scaledPt.x - pt.x;
+        float y = scaledPt.y - pt.y;
+        
+        float4 a00 = p11;
+		float4 a01 = -.5*p10 + .5*p12;
+		float4 a02 = p10 - 2.5*p11 + 2.0*p12 - .5*p13;
+		float4 a03 = -.5*p10 + 1.5*p11 - 1.5*p12 + .5*p13;
+		float4 a10 = -.5*p01 + .5*p21;
+		float4 a11 = .25*p00 - .25*p02 - .25*p20 + .25*p22;
+		float4 a12 = -.5*p00 + 1.25*p01 - p02 + .25*p03 + .5*p20 - 1.25*p21 + p22 - .25*p23;
+		float4 a13 = .25*p00 - .75*p01 + .75*p02 - .25*p03 - .25*p20 + .75*p21 - .75*p22 + .25*p23;
+		float4 a20 = p01 - 2.5*p11 + 2.0*p21 - .5*p31;
+		float4 a21 = -.5*p00 + .5*p02 + 1.25*p10 - 1.25*p12 - p20 + p22 + .25*p30 - .25*p32;
+		float4 a22 = p00 - 2.5*p01 + 2.0*p02 - .5*p03 - 2.5*p10 + 6.25*p11 - 5.0*p12 + 1.25*p13 + 2.0*p20 - 5.0*p21 + 4.0*p22 - p23 - .5*p30 + 1.25*p31 - p32 + .25*p33;
+		float4 a23 = -.5*p00 + 1.5*p01 - 1.5*p02 + .5*p03 + 1.25*p10 - 3.75*p11 + 3.75*p12 - 1.25*p13 - p20 + 3.0*p21 - 3.0*p22 + p23 + .25*p30 - .75*p31 + .75*p32 - .25*p33;
+		float4 a30 = -.5*p01 + 1.5*p11 - 1.5*p21 + .5*p31;
+		float4 a31 = .25*p00 - .25*p02 - .75*p10 + .75*p12 + .75*p20 - .75*p22 - .25*p30 + .25*p32;
+		float4 a32 = -.5*p00 + 1.25*p01 - p02 + .25*p03 + 1.5*p10 - 3.75*p11 + 3.0*p12 - .75*p13 - 1.5*p20 + 3.75*p21 - 3.0*p22 + .75*p23 + .5*p30 - 1.25*p31 + p32 - .25*p33;
+		float4 a33 = .25*p00 - .75*p01 + .75*p02 - .25*p03 - .75*p10 + 2.25*p11 - 2.25*p12 + .75*p13 + .75*p20 - 2.25*p21 + 2.25*p22 - .75*p23 - .25*p30 + .75*p31 - .75*p32 + .25*p33;
+    
+    
+		float x2 = x * x;
+		float x3 = x2 * x;
+		float y2 = y * y;
+		float y3 = y2 * y;
+	
+		dst =  (a00 + a01 * y + a02 * y2 + a03 * y3) +
+		       (a10 + a11 * y + a12 * y2 + a13 * y3) * x +
+		       (a20 + a21 * y + a22 * y2 + a23 * y3) * x2 +
+		       (a30 + a31 * y + a32 * y2 + a33 * y3) * x3;
+    }
+}

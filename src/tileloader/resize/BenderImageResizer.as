@@ -19,8 +19,29 @@ package tileloader.resize
 	public class BenderImageResizer extends EventDispatcher {
 		
 		[Embed ( source="resizer.pbj", mimeType="application/octet-stream" ) ]
-		private static const sampler:Class;
+		/**
+		 * @private
+		 * Bilinear kernel 
+		 */
+		private static const bilinearSampler:Class;
 		
+		[Embed ( source="bicubicResizer.pbj", mimeType="application/octet-stream" ) ]
+		/**
+		 * @private
+		 * Bicubic kernel 
+		 */
+		private static const bicubicSampler:Class;
+		
+		/**
+		 * Bilinear resize 
+		 */
+		public static const BILINEAR:String = "bilinear";
+		
+		/**
+		 * Bicubic resize 
+		 */
+		public static const BICUBIC:String = "bicubic";
+
 		/**
 		 * Resizes BitmapData using bilinear bender 
 		 * @param input Input bitmap
@@ -29,7 +50,7 @@ package tileloader.resize
 		 * @param fit Scale type (one of the ImageFitType values)
 		 * @return Created ShaderJob/BitmapData pair for the operation
 		 */
-		public static function resize(input:BitmapData, targetWidth:Number, targetHeight:Number, fit:String):ResizeJob {
+		public static function resize(input:BitmapData, targetWidth:Number, targetHeight:Number, fit:String, resizer:String = BenderImageResizer.BILINEAR):ResizeJob {
 			//Correct fit type
 			fit = correctScaleType(fit);
 			
@@ -65,11 +86,9 @@ package tileloader.resize
 			var output:BitmapData = new BitmapData(outputWidth, outputHeight);  
 			
 			var shader:Shader = new Shader();
-			shader.byteCode = new sampler as ByteArray;
+			BenderImageResizer.setupShader(shader, resizer, scale, shift);
 			shader.data.src.input = input;
-			shader.data.scale.value = [scale];
-			shader.data.shift.value = [shift.x, shift.y];
-			
+
 			var job:ShaderJob = new ShaderJob();
 			job.target = output;
 			job.shader = shader;
@@ -88,6 +107,21 @@ package tileloader.resize
 				case ImageFitType.FIT_IMAGE:
 				default:
 					return ImageFitType.FIT_IMAGE;
+			}
+		}
+		
+		private static function setupShader(shader:Shader, resizeType:String, scale:Number, shift:Point):void {
+			switch (resizeType) {
+				case BenderImageResizer.BICUBIC:
+					shader.byteCode = new bicubicSampler as ByteArray;
+					shader.data.scale.value = [scale, scale];
+					shader.data.shift.value = [shift.x, shift.y];
+					return;
+				case BenderImageResizer.BILINEAR:
+				default:
+					shader.byteCode = new bilinearSampler as ByteArray;
+					shader.data.scale.value = [scale];
+					shader.data.shift.value = [shift.x, shift.y];
 			}
 		}
 	}
