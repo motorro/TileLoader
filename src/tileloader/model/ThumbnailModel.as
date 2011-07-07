@@ -63,7 +63,7 @@ package tileloader.model
 			if (null != value) {
 				var file:ImageFormatFileVO; 
 				if (null != imageVO.formats && null != (file = ImageFormatFileVO(imageVO.formats[config.thumbnailFormat]))) {
-					thumbnail = file.file.url;
+					thumbnail = file.file.nativePath;
 					return;
 				}
 				
