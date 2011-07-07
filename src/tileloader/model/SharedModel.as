@@ -67,10 +67,6 @@ package tileloader.model
 		 */
 		public var applicationLog:Vector.<String>;
 		
-		[Bindable]
-		//FIXME: remove
-		public var logggg:String
-		
 		[MessageDispatcher]
 		/**
 		 * @private
@@ -90,6 +86,10 @@ package tileloader.model
 			initialized = false;
 
 			//Load configuration
+			if (null != _logger) {
+				_logger.info("Application start");
+			}
+			
 			sendMessage(new ConfigMessage());
 		}
 		
@@ -102,6 +102,7 @@ package tileloader.model
 			if (null != _logger) {
 				_logger.info("Application configured");
 			}
+			
 			sendMessage(new ConfigResultMessage(ConfigResultMessage.CONFIG_COMPLETE));
 			initialized = true;
 		}

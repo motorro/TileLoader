@@ -7,14 +7,17 @@
 					   xmlns:view="tileloader.view.*"
 					   width="422" height="450" 
 					   showStatusBar="false" 
-					   preinitialize="onPreinit();">
+					   preinitialize="onPreinit();"
+					   applicationComplete="onAppComplete()">
 	<fx:Metadata> 
 		[ResourceBundle("interface")] 
 	</fx:Metadata>	<fx:Script>
 		<![CDATA[
+			import mx.logging.ILogger;
 			import mx.logging.Log;
 			
 			import tileloader.context.ApplicationContext;
+			import tileloader.log.LogUtils;
 			import tileloader.model.SharedModel;
 			
 			[Bindable]
@@ -26,6 +29,33 @@
 			 */
 			private function onPreinit():void {
 				Log.addTarget(logTarget);
+			}
+			
+			/**
+			 * @private
+			 * Global exception handler attachment
+			 */
+			private function onAppComplete():void {
+				loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onGlobalError);
+			}
+			
+			/**
+			 * @private
+			 * Global exception handler
+			 */
+			private function onGlobalError(event:UncaughtErrorEvent):void {
+				var logger:ILogger = LogUtils.getLoggerByObject(this);
+				if (false == logger) return;
+				
+				if (event.error is Error){
+					var error:Error = event.error as Error;
+					logger.error(error.message);
+				} else if (event.error is ErrorEvent) {
+					var errorEvent:ErrorEvent = event.error as ErrorEvent;
+					logger.error(errorEvent.text);
+				} else {
+					logger.error(error.toString());
+				}
 			}
 		]]>
 	</fx:Script>
@@ -53,8 +83,8 @@
 		<parsley:FastInject property="model" type="{SharedModel}"/> 
 		
 	</fx:Declarations>
-	<view:DropZone left="10" right="10" top="10" bottom="274" contentBackgroundAlpha="0.6"
-				   contentBackgroundColor="#D2F0F9">
+	<view:DropZone left="10" right="10" top="10" bottom="40" contentBackgroundAlpha="0.6"
+				   contentBackgroundColor="#D2F0F9" enabled="{model.initialized}">
 	</view:DropZone>
 	<s:Button x="10" y="418" width="400" label="@Resource(key='btnUploadCaption', bundle='interface')">
 		<s:click>
@@ -63,5 +93,4 @@
 			]]>
 		</s:click>
 	</s:Button>
-	<s:TextArea id="log" x="10" y="184" width="402" height="226" verticalScrollPolicy="on" horizontalScrollPolicy="on" text="{model.logggg}"/>
 </s:WindowedApplication>

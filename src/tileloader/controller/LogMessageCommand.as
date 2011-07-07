@@ -33,8 +33,6 @@ package tileloader.controller
 			log.push(message.message);
 			
 			CONFIG::LOGGING {
-				//FIXME: remove
-				model.logggg += message.message;
 				trace (message.message);
 			}
 			
