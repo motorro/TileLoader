@@ -8,7 +8,9 @@
 					   width="422" height="450" 
 					   showStatusBar="false" 
 					   preinitialize="onPreinit();">
-	<fx:Script>
+	<fx:Metadata> 
+		[ResourceBundle("interface")] 
+	</fx:Metadata>	<fx:Script>
 		<![CDATA[
 			import mx.logging.Log;
 			
@@ -51,8 +53,15 @@
 		<parsley:FastInject property="model" type="{SharedModel}"/> 
 		
 	</fx:Declarations>
-	<view:DropZone left="10" right="10" top="10" bottom="40" contentBackgroundAlpha="0.6"
+	<view:DropZone left="10" right="10" top="10" bottom="274" contentBackgroundAlpha="0.6"
 				   contentBackgroundColor="#D2F0F9">
 	</view:DropZone>
-	<s:Button x="10" y="418" width="400" label="Upload"/>
+	<s:Button x="10" y="418" width="400" label="@Resource(key='btnUploadCaption', bundle='interface')">
+		<s:click>
+			<![CDATA[
+				model.startUpload();
+			]]>
+		</s:click>
+	</s:Button>
+	<s:TextArea id="log" x="10" y="184" width="402" height="226" verticalScrollPolicy="on" horizontalScrollPolicy="on" text="{model.logggg}"/>
 </s:WindowedApplication>

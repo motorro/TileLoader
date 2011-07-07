@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   xmlns:parsley="http://www.spicefactory.org/parsley" 
+			   width="300" height="138"
+			   title="@Resource(key='wndUploadTitle', bundle='interface')">
+	<fx:Metadata> 
+		[ResourceBundle("interface")] 
+	</fx:Metadata>	
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
+			
+			import tileloader.model.UploadProgressModel;
+			
+			[Bindable]
+			/**
+			 * Presentation model reference
+			 */
+			public var model:UploadProgressModel;
+			
+			/**
+			 * Progress watcher for model
+			 */
+			private var _progressWatcher:ChangeWatcher;
+			
+			/**
+			 * @private
+			 * Binds to files left property to update progress bar
+			 */
+			private function bindModel():void {
+				_progressWatcher = BindingUtils.bindSetter(onFilesLeftChange, model, "filesLeft", false, true);
+			}
+			
+			/**
+			 * @private
+			 * Removes model binding
+			 */
+			private function unbindModel():void {
+				_progressWatcher.unwatch();				
+			}
+			
+			/**
+			 * @private
+			 * Updates progress bar on file list change
+			 */
+			private function onFilesLeftChange(filesLeft:int):void {
+				progress.setProgress(model.totalFiles - filesLeft, model.totalFiles);
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<parsley:FastInject property="model" type="{UploadProgressModel}" injectionComplete="bindModel()" removedFromStage="unbindModel()"/> 
+	</fx:Declarations>
+	<mx:ProgressBar 
+		id="progress"
+		left="10" right="10" top="30"
+		label="{resourceManager.getString('interface', 'lblUploadProgress', [model.filesLeft])}"
+		mode="manual"
+	/>
+	<s:Button bottom="12" label="Button" horizontalCenter="0">
+		<s:click>
+			<![CDATA[
+				model.cancel();
+			]]>
+		</s:click>
+	</s:Button>
+</s:TitleWindow>

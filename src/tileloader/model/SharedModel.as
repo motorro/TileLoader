@@ -1,13 +1,18 @@
 package tileloader.model
 {
+	import flash.desktop.NativeApplication;
+	import flash.display.DisplayObject;
 	import flash.events.ErrorEvent;
 	
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
 	import mx.events.CloseEvent;
 	import mx.logging.ILogger;
+	import mx.managers.PopUpManager;
 	import mx.resources.IResourceManager;
 	import mx.resources.ResourceManager;
+	
+	import org.spicefactory.parsley.core.context.Context;
 	
 	import tileloader.log.LogUtils;
 	import tileloader.messages.ConfigMessage;
@@ -17,7 +22,11 @@ package tileloader.model
 	import tileloader.messages.FileAddMessage;
 	import tileloader.messages.OrderCleanupMessage;
 	import tileloader.messages.RescanFileQueueMessage;
+	import tileloader.messages.RescanUploadQueueMessage;
 	import tileloader.messages.ResizeImageMessage;
+	import tileloader.messages.StartUploadMessage;
+	import tileloader.messages.UploadImageMessage;
+	import tileloader.view.UploadProgress;
 
 	[ResourceBundle("messages")]
 	/**
@@ -58,12 +67,23 @@ package tileloader.model
 		 */
 		public var applicationLog:Vector.<String>;
 		
+		[Bindable]
+		//FIXME: remove
+		public var logggg:String
+		
 		[MessageDispatcher]
 		/**
 		 * @private
 		 * Parsley event dispatcher
 		 */ 
 		public var sendMessage:Function;
+		
+		[Inject]
+		/**
+		 * @private
+		 * Context reference 
+		 */
+		public var context:Context;
 		
 		[Init]
 		public function init():void {
@@ -110,6 +130,7 @@ package tileloader.model
 			Alert.show(rm.getString("messages", "configError", [fault.text]), rm.getString("messages", 'configErrorTitle'), Alert.OK, null, listener);
 		}
 		
+		//TODO: Think about moving those commands elsewhere
 		[CommandComplete]
 		/**
 		 * @private 
@@ -125,7 +146,45 @@ package tileloader.model
 		 * File resize complete handler
 		 */
 		public function onFileResized(message:ResizeImageMessage):void {
-			sendMessage(new RescanFileQueueMessage());			
+			sendMessage(new RescanFileQueueMessage());	
 		}
+		
+
+		//Uploading
+		
+		/**
+		 * Starts image upload 
+		 */
+		public function startUpload():void {
+			sendMessage(new StartUploadMessage());			
+		}
+		
+		[CommandComplete]
+		/**
+		 * @private 
+		 * File resize complete handler
+		 */
+		public function onStartUploadRequested(message:StartUploadMessage):void {
+			//TODO: Add popup
+		}
+		
+		[CommandComplete(selector="userCancelled")]
+		/**
+		 * @private 
+		 * File resize complete handler
+		 */
+		public function onCancelUploadRequested(message:StartUploadMessage):void {
+			//TODO: Remove popup
+		}
+
+		[CommandComplete]
+		/**
+		 * @private 
+		 * File resize complete handler
+		 */
+		public function onImageUploaded(message:UploadImageMessage):void {
+			sendMessage(new RescanUploadQueueMessage());	
+		}
+		
 	}
 }

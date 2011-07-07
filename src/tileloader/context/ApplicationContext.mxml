@@ -12,7 +12,12 @@
 			import tileloader.controller.LogMessageCommand;
 			import tileloader.controller.OrderCleanupCommand;
 			import tileloader.controller.RescanFileQueueCommand;
+			import tileloader.controller.RescanUploadQueueCommand;
 			import tileloader.controller.ResizeImageCommand;
+			import tileloader.controller.StartUploadCommand;
+			import tileloader.controller.UploadCancelledByUserCommand;
+			import tileloader.controller.UploadImageCommand;
+			import tileloader.model.UploadProgressModel;
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -20,6 +25,8 @@
 		<model:ApplicationConfig/>
 		<model:AuthenticationModel/>
 		<model:ResizerModel/>
+		<model:UploaderModel/>
+		<DynamicObject type="{UploadProgressModel}"/>
 		<DynamicCommand	type="{LogMessageCommand}"/>
 		<DynamicCommand	type="{ConfigCommand}"/>
 		<DynamicCommand	type="{ExitCommand}"/>
@@ -28,5 +35,9 @@
 		<DynamicCommand type="{AuthenticateCommand}"/>
 		<DynamicCommand type="{RescanFileQueueCommand}"/>
 		<DynamicCommand type="{ResizeImageCommand}"/>
+		<DynamicCommand type="{StartUploadCommand}"/>
+		<DynamicCommand type="{UploadCancelledByUserCommand}"/>
+		<DynamicCommand type="{RescanUploadQueueCommand}"/>
+		<DynamicCommand type="{UploadImageCommand}"/>
 	</fx:Declarations>
 </Objects>
