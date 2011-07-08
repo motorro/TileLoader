@@ -17,11 +17,22 @@
 			import mx.logging.Log;
 			
 			import tileloader.context.ApplicationContext;
+			import tileloader.controller.WorkflowController;
 			import tileloader.log.LogUtils;
-			import tileloader.model.SharedModel;
+			import tileloader.model.MainViewModel;
 			
 			[Bindable]
-			public var model:SharedModel;
+			/**
+			 * @private
+			 * Presentation model
+			 */
+			public var model:MainViewModel;
+
+			/**
+			 * @private
+			 * Workflow controller
+			 */
+			public var workflow:WorkflowController;
 			
 			/**
 			 * @private
@@ -29,6 +40,17 @@
 			 */
 			private function onPreinit():void {
 				Log.addTarget(logTarget);
+			}
+			
+			/**
+			 * @private
+			 * Application entry point
+			 */
+			private function checkAndRun():void {
+				if (null == model) return;
+				if (null == workflow) return;
+				
+				workflow.run();
 			}
 			
 			/**
@@ -80,11 +102,12 @@
 		
 		<parsley:Configure targets="{[logTarget]}"/>
 		
-		<parsley:FastInject property="model" type="{SharedModel}"/> 
+		<parsley:FastInject property="model" type="{MainViewModel}" injectionComplete="checkAndRun()"/> 
+		<parsley:FastInject property="workflow" type="{WorkflowController}" injectionComplete="checkAndRun()"/> 
 		
 	</fx:Declarations>
 	<view:DropZone left="10" right="10" top="10" bottom="40" contentBackgroundAlpha="0.6"
-				   contentBackgroundColor="#D2F0F9" enabled="{model.initialized}">
+				   contentBackgroundColor="#D2F0F9">
 	</view:DropZone>
 	<s:Button x="10" y="418" width="400" label="@Resource(key='btnUploadCaption', bundle='interface')">
 		<s:click>

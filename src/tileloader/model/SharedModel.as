@@ -28,7 +28,6 @@ package tileloader.model
 	import tileloader.messages.UploadImageMessage;
 	import tileloader.view.UploadProgress;
 
-	[ResourceBundle("messages")]
 	/**
 	 * Global application data model
 	 *  
@@ -37,12 +36,6 @@ package tileloader.model
 	 */
 	public class SharedModel {
 		
-		/**
-		 * @private
-		 * Logger 
-		 */
-		private static const _logger:ILogger = LogUtils.getLoggerByClass(SharedModel);
-
 		[Bindable]
 		/**
 		 * Initialization flag 
@@ -66,126 +59,6 @@ package tileloader.model
 		 * Application log
 		 */
 		public var applicationLog:Vector.<String>;
-		
-		[MessageDispatcher]
-		/**
-		 * @private
-		 * Parsley event dispatcher
-		 */ 
-		public var sendMessage:Function;
-		
-		[Inject]
-		/**
-		 * @private
-		 * Context reference 
-		 */
-		public var context:Context;
-		
-		[Init]
-		public function init():void {
-			initialized = false;
-
-			//Load configuration
-			if (null != _logger) {
-				_logger.info("Application start");
-			}
-			
-			sendMessage(new ConfigMessage());
-		}
-		
-		[CommandComplete]
-		/**
-		 * @private 
-		 * Config complete handler
-		 */
-		public function onConfigComplete(message:ConfigMessage):void {
-			if (null != _logger) {
-				_logger.info("Application configured");
-			}
-			
-			sendMessage(new ConfigResultMessage(ConfigResultMessage.CONFIG_COMPLETE));
-			initialized = true;
-		}
-		
-		[CommandError]
-		/**
-		 * @private 
-		 * Config load error
-		 */
-		public function onConfigError(fault:ErrorEvent, message:ConfigMessage):void {
-			var listener:Function = function(event:CloseEvent):void {
-				if (null == event || Alert.OK == event.detail) {
-					//TODO: Log output
-					sendMessage(new ExitMessage(ExitMessages.CONFIG_ERROR));
-					return;
-				} 
-			}
-				
-			if (null != _logger) {
-				_logger.error("Configuration error: " + fault.text);
-			}
-			sendMessage(new ConfigResultMessage(ConfigResultMessage.CONFIG_FAILED));
-			
-			var rm:IResourceManager = ResourceManager.getInstance();
-			
-			Alert.show(rm.getString("messages", "configError", [fault.text]), rm.getString("messages", 'configErrorTitle'), Alert.OK, null, listener);
-		}
-		
-		//TODO: Think about moving those commands elsewhere
-		[CommandComplete]
-		/**
-		 * @private 
-		 * File added handler
-		 */
-		public function onFileAdded(message:FileAddMessage):void {
-			sendMessage(new RescanFileQueueMessage());			
-		}
-
-		[CommandComplete]
-		/**
-		 * @private 
-		 * File resize complete handler
-		 */
-		public function onFileResized(message:ResizeImageMessage):void {
-			sendMessage(new RescanFileQueueMessage());	
-		}
-		
-
-		//Uploading
-		
-		/**
-		 * Starts image upload 
-		 */
-		public function startUpload():void {
-			sendMessage(new StartUploadMessage());			
-		}
-		
-		[CommandComplete]
-		/**
-		 * @private 
-		 * File resize complete handler
-		 */
-		public function onStartUploadRequested(message:StartUploadMessage):void {
-			//TODO: Add popup
-		}
-		
-		[CommandComplete(selector="userCancelled")]
-		/**
-		 * @private 
-		 * File resize complete handler
-		 */
-		public function onCancelUploadRequested(message:StartUploadMessage):void {
-			//TODO: Remove popup
-		}
-
-		[CommandComplete]
-		/**
-		 * @private 
-		 * File resize complete handler
-		 */
-		public function onImageUploaded(message:UploadImageMessage):void {
-			sendMessage(new RescanUploadQueueMessage());	
-		}
 		
 	}
 }
