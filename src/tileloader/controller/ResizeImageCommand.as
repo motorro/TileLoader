@@ -10,6 +10,7 @@ package tileloader.controller
 	
 	import tileloader.controller.tasks.FormatResizeCleanupTask;
 	import tileloader.controller.tasks.ImageEncodeTask;
+	import tileloader.controller.tasks.ImageMeasureTask;
 	import tileloader.controller.tasks.ImageResizeCleanupTask;
 	import tileloader.controller.tasks.ImageResizeTask;
 	import tileloader.controller.tasks.ImageSaveTask;
@@ -68,6 +69,9 @@ package tileloader.controller
 			
 			//Load original file
 			result.addTask(new LoadImageFileTask(message.image.path));
+			
+			//Measure original image
+			result.addTask(new ImageMeasureTask(image));
 			
 			//Add resize task for each required format
 			for each (var format:ImageFormatVO in configModel.imageFormats) {

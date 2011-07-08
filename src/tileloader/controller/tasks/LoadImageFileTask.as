@@ -77,6 +77,7 @@ package tileloader.controller.tasks
 				_logger.info("Image loaded.");
 			}
 			unsubscribeLoaderEvents();
+			
 			complete();
 		}
 		

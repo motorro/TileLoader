@@ -13,6 +13,7 @@ package tileloader.controller.tasks
 	import org.spicefactory.lib.task.Task;
 	
 	import tileloader.log.LogUtils;
+	import tileloader.model.UploaderModel;
 	import tileloader.model.VO.ImageFormatFileVO;
 	
 	/**
@@ -74,13 +75,15 @@ package tileloader.controller.tasks
 				_logger.info("Uploading image to: " + _scriptUrl);
 			}
 
+			var model:UploaderModel = UploaderModel(data);
+			
 			var file:File = _file.file;
 			file.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
 			file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
 			file.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
 			
 			var request:URLRequest = new URLRequest(_scriptUrl);
-			request.data = {order:_order, format:_file.format.id};
+			request.data = {order:_order, format:_file.format.id, filename:model.fileInProgress.path.name, orientation:model.fileInProgress.orientation};
 			request.method = URLRequestMethod.POST;
 			
 			file.upload(request);

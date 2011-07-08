@@ -14,6 +14,7 @@ package tileloader.model.VO
 	 * @author kochetkov
 	 * 
 	 */
+	//TODO: Change resize errors to those events and add error state
 	[Event (name="resizeComplete", type="tileloader.messages.ImageEvent")]
 	[Event (name="resizeFailed", type="tileloader.messages.ImageEvent")]
 	[Event (name="uploadComplete", type="tileloader.messages.ImageEvent")]
@@ -26,9 +27,24 @@ package tileloader.model.VO
 	public class ImageVO extends EventDispatcher implements IUID {
 		
 		/**
+		 * Image is portrait 
+		 */
+		public static const PORTRAIT:String="portrait";
+		
+		/**
+		 * Image is landscape 
+		 */
+		public static const LANDSCAPE:String="landscape";
+		
+		/**
 		 * File reference 
 		 */
 		public var path:File;
+		
+		/**
+		 * Image Orientation (portrait/landscape) 
+		 */
+		public var orientation:String;
 		
 		/**
 		 * Resized files 
