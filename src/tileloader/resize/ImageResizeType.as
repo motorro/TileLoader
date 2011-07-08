@@ -15,7 +15,7 @@ package tileloader.resize
 		/**
 		 * Bilinear iterative resize 
 		 */
-		public static const BILINEAR_ITERATIVE:String = "bilinearIterative";
+		public static const BILINEAR_ITERATIVE:String = "bilineariterative";
 
 		/**
 		 * Bicubic resize 

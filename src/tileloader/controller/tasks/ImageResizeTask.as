@@ -83,7 +83,7 @@ package tileloader.controller.tasks
 			_resizer.addEventListener(ImageResizerEvent.COMPLETE, onComplete);
 			_resizer.addEventListener(ErrorEvent.ERROR, onError);
 			
-			_resizer.resize(whichOne(), _format.targetWidth, _format.targetHeight, _format.fit);
+			_resizer.resize(whichOne(), _format.targetWidth, _format.targetHeight, _format.fit, _format.resizeType);
 			
 			//Sets original BitmapData to use in an effort to use formats sorted by square
 			function whichOne():BitmapData {

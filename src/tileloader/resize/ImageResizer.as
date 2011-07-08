@@ -46,24 +46,6 @@ package tileloader.resize
 		
 		/**
 		 * @private
-		 * Target width storage 
-		 */
-		private var _targetWidth:Number;
-		
-		/**
-		 * @private
-		 * Target height storage 
-		 */
-		private var _targetHeigh:Number;
-		
-		/**
-		 * @private
-		 * Target fit type storage 
-		 */
-		private var _fit:String;
-		
-		/**
-		 * @private
 		 * Output storage 
 		 */
 		private var _output:BitmapData;
@@ -110,21 +92,19 @@ package tileloader.resize
 			//Check resize parameters
 			if (targetWidth <= 0 || targetHeight <= 0) return false;
 
-			_targetWidth = targetWidth;
-			_targetHeigh = targetHeight;
 			
-			_fit = validateFit(fit);
+			fit = validateFit(fit);
 			
 			switch (resizeType) {
 				case ImageResizeType.BICUBIC:
-					resizeBilinear(input);
+					resizeBicubic(input, targetWidth, targetHeight, fit);
 					break;
 				case ImageResizeType.BILINEAR_ITERATIVE:
-					resizeBilinearIterative(input);
+					resizeBilinearIterative(input, targetWidth, targetHeight, fit);
 					break;
 				case ImageResizeType.BILINEAR:
 				case null:
-					resizeBilinear(input);
+					resizeBilinear(input, targetWidth, targetHeight, fit);
 					break;
 				default:
 					if (null != _logger) {
@@ -157,8 +137,8 @@ package tileloader.resize
 		 * @private 
 		 * Performs bicubic resize
 		 */
-		private function resizeBicubic(input:BitmapData):void {
-			_job = BenderImageResizer.resize(input, _targetWidth, _targetHeigh, _fit, BenderImageResizer.BICUBIC);
+		private function resizeBicubic(input:BitmapData, targetWidth:Number, targetHeight:Number, fit:String):void {
+			_job = BenderImageResizer.resize(input, targetWidth, targetHeight, fit, BenderImageResizer.BICUBIC);
 			_job.job.addEventListener(ShaderEvent.COMPLETE, onResizeComplete, false, 0, true);
 			try {
 				_job.job.start(false);
@@ -171,16 +151,48 @@ package tileloader.resize
 		 * @private  
 		 * Performs iterative bilinear resize
 		 */
-		private function resizeBilinearIterative(input:BitmapData):void {
+		private function resizeBilinearIterative(input:BitmapData, targetWidth:Number, targetHeight:Number, fit:String):void {
+			//If original image is more than two times larger
+			//than target - use chain of several 1/2 resizes
+			var iterationResult:BitmapData;
+
+			if (input.width / targetWidth <= 2 || input.height / targetHeight <= 2) {
+				if (null != _logger) {
+					_logger.info("Last iteration resize to: " + targetWidth + "x" + targetHeight);
+				}
+				resizeBilinear(input, targetWidth, targetHeight, fit);
+				return;
+			}
 			
+			var iterationWidth:Number = Math.floor(input.width / 2);
+			var iterationHeight:Number = Math.floor(input.height / 2);
+			
+			if (null != _logger) {
+				_logger.info("Resize iteration to: " + iterationWidth + "x" + iterationHeight);
+			}
+			
+			_job = BenderImageResizer.resize(input, iterationWidth, iterationHeight, ImageFitType.FIT_IMAGE, ImageResizeType.BILINEAR);
+			_job.job.addEventListener(ShaderEvent.COMPLETE, onIterationComplete);
+			_job.job.start(false);
+			
+			function onIterationComplete(event:ShaderEvent):void {
+				_job.job.removeEventListener(ShaderEvent.COMPLETE, onIterationComplete);
+				if (null != iterationResult) {
+					iterationResult.dispose();
+				}
+				iterationResult = _job.output;
+				_job = null;
+				
+				resizeBilinearIterative(iterationResult, targetWidth, targetHeight, fit);
+			}
 		}
 		
 		/**
 		 * @private 
 		 * Performs bilinear resize
 		 */
-		private function resizeBilinear(input:BitmapData):void {
-			_job = BenderImageResizer.resize(input, _targetWidth, _targetHeigh, _fit, BenderImageResizer.BILINEAR);
+		private function resizeBilinear(input:BitmapData, targetWidth:Number, targetHeight:Number, fit:String):void {
+			_job = BenderImageResizer.resize(input, targetWidth, targetHeight, fit, BenderImageResizer.BILINEAR);
 			_job.job.addEventListener(ShaderEvent.COMPLETE, onResizeComplete, false, 0, true);
 			try {
 				_job.job.start(false);
