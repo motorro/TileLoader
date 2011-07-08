@@ -88,7 +88,7 @@ package tileloader.controller.tasks
 							}
 						}
 						
-						var format:ImageFormatVO = new ImageFormatVO(formatData.@id.toString(), int(formatData.@width.toString()), int(formatData.@height.toString()), formatData.@fit.toString());
+						var format:ImageFormatVO = new ImageFormatVO(formatData.@id.toString(), int(formatData.@width.toString()), int(formatData.@height.toString()), formatData.@fit.toString(), formatData.@type.toString());
 						imageConfig[i] = format;
 						if (isThumbnail) {
 							appConfig.thumbnailFormat = format;

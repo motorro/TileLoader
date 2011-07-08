@@ -2,6 +2,7 @@ package tileloader.controller.tasks
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.events.ErrorEvent;
 	import flash.events.ShaderEvent;
 	
 	import mx.logging.ILogger;
@@ -12,6 +13,8 @@ package tileloader.controller.tasks
 	import tileloader.model.ResizerModel;
 	import tileloader.model.VO.ImageFormatVO;
 	import tileloader.resize.BenderImageResizer;
+	import tileloader.resize.ImageResizer;
+	import tileloader.resize.ImageResizerEvent;
 	import tileloader.resize.ResizeJob;
 	
 	/**
@@ -35,9 +38,9 @@ package tileloader.controller.tasks
 		
 		/**
 		 * @private
-		 * Resize job to perform 
+		 * Image resizer instance 
 		 */
-		private var _job:ResizeJob;
+		private var _resizer:ImageResizer;
 		
 		/**
 		 * Constructor 
@@ -61,7 +64,7 @@ package tileloader.controller.tasks
 			var message:String;
 			
 			if (null != _logger) {
-				_logger.info("Resizing to: " + _format.targetWidth + "x" + _format.targetHeight);
+				_logger.info("Resizing to: " + _format.targetWidth + "x" + _format.targetHeight + " using " + _format.resizeType + " method");
 			}
 			
 			var original:BitmapData;
@@ -76,11 +79,11 @@ package tileloader.controller.tasks
 				return;
 			}
 			
-			_job = BenderImageResizer.resize(whichOne(), _format.targetWidth, _format.targetHeight, _format.fit);
+			_resizer = new ImageResizer();
+			_resizer.addEventListener(ImageResizerEvent.COMPLETE, onComplete);
+			_resizer.addEventListener(ErrorEvent.ERROR, onError);
 			
-			_job.job.addEventListener(ShaderEvent.COMPLETE, onComplete);
-			
-			_job.job.start(false);
+			_resizer.resize(whichOne(), _format.targetWidth, _format.targetHeight, _format.fit);
 			
 			//Sets original BitmapData to use in an effort to use formats sorted by square
 			function whichOne():BitmapData {
@@ -103,20 +106,44 @@ package tileloader.controller.tasks
 		 * @private
 		 * Shader job complete handler 
 		 */
-		private function onComplete(event:ShaderEvent):void {
+		private function onComplete(event:ImageResizerEvent):void {
 			if (null != _logger) {
 				_logger.info("Resize complete.");
 			}
-			
-			_job.job.removeEventListener(ShaderEvent.COMPLETE, onComplete);
 			
 			if (null != ResizerModel(data).output) {
 				ResizerModel(data).output.dispose();
 			}
 			
-			ResizerModel(data).output = _job.output;
+			ResizerModel(data).output = event.bitmapData;
+			
+			disposeResizer();
 			
 			complete();
+		}
+		
+		/**
+		 * @private
+		 * Resize error message 
+		 */
+		private function onError(event:ErrorEvent):void {
+			disposeResizer();
+			var message:String = "Original is not valid bitmap";
+			if (null != _logger) {
+				_logger.error(message);
+			}
+			error(message);
+		}
+		
+		/**
+		 * @private 
+		 * Disposes resizer in use
+		 */
+		private function disposeResizer():void {
+			_resizer.removeEventListener(ImageResizerEvent.COMPLETE, onComplete);
+			_resizer.removeEventListener(ErrorEvent.ERROR, onError);
+			_resizer.cleanup(false);
+			_resizer = null;
 		}
 		
 	}

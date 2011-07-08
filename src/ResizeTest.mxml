@@ -26,10 +26,26 @@
 	<s:Button x="421" y="101" label="resize">
 		<s:click>
 			<![CDATA[
-				var job:ResizeJob = BenderImageResizer.resize(source.bitmapData, Number(w.text), Number(h.text), scale.selectedItem.data);
+				var numOfResize:int = Math.floor(source.bitmapData.width / Number(w.text)) / 2;
+			
+				var src:BitmapData = source.bitmapData;
+				var job:ResizeJob;			
+
+				while (--numOfResize >= 0) {
+					job = BenderImageResizer.resize(src, Math.floor(src.width / 2), Math.floor(src.height / 2), scale.selectedItem.data);
+					trace ("Resizing to: " + job.output.width + "x" + job.output.height);
+					job.job.start(true);
+					src = job.output;
+				}	
+
+				job = BenderImageResizer.resize(src, Number(w.text), Number(h.text), scale.selectedItem.data);
 				trace ("Resizing to: " + job.output.width + "x" + job.output.height);
-				result.source = new Bitmap(job.output);
+				
+			
 				job.job.start(true);
+	
+			
+				result.source = new Bitmap(job.output);
 			]]>
 		</s:click>
 	</s:Button>
