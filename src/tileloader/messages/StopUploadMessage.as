@@ -1,6 +1,12 @@
 package tileloader.messages
 {
-	public class UploadCancelMessage {
+	/**
+	 * Message that stopps upload queues
+	 *  
+	 * @author kochetkov
+	 * 
+	 */
+	public class StopUploadMessage {
 		
 		/**
 		 * Upload cancelled by user 
@@ -10,8 +16,13 @@ package tileloader.messages
 		/**
 		 * Upload cancelled as an error result 
 		 */
-		public static const ERROR_CANCELLED:String = "errorCancelled";
+		public static const ERROR:String = "error";
 		
+		/**
+		 * Upload finished 
+		 */
+		public static const FINISHED:String = "finished";
+
 		[Selector]
 		/**
 		 * Message type selector 
@@ -20,9 +31,9 @@ package tileloader.messages
 		
 		/**
 		 * Constructor 
-		 * @param type Cancel type
+		 * @param type Stop type
 		 */
-		public function UploadCancelMessage(type:String) {
+		public function StopUploadMessage(type:String) {
 			this.type = type;
 		}
 	}

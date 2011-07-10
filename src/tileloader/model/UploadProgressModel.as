@@ -3,7 +3,7 @@ package tileloader.model
 	import mx.binding.utils.BindingUtils;
 	import mx.binding.utils.ChangeWatcher;
 	
-	import tileloader.messages.UploadCancelMessage;
+	import tileloader.messages.StopUploadMessage;
 
 	/**
 	 * Presentation model for upload progress window
@@ -66,7 +66,7 @@ package tileloader.model
 		 * Cancells uploads 
 		 */
 		public function cancel():void {
-			sendMessage(new UploadCancelMessage(UploadCancelMessage.USER_CANCELLED));
+			sendMessage(new StopUploadMessage(StopUploadMessage.USER_CANCELLED));
 		}
 		
 		/**

@@ -23,6 +23,7 @@ package tileloader.controller
 	import tileloader.messages.RescanUploadQueueMessage;
 	import tileloader.messages.ResizeImageMessage;
 	import tileloader.messages.StartUploadMessage;
+	import tileloader.messages.StopUploadMessage;
 	import tileloader.messages.UploadImageMessage;
 	import tileloader.model.ApplicationConfig;
 	import tileloader.model.AuthenticationModel;
@@ -242,6 +243,10 @@ package tileloader.controller
 		 * File resize complete handler
 		 */
 		public function onFileResized(message:ResizeImageMessage):void {
+			//Upload new file if in upload state
+			if (uploaderModel.uploading) {
+				sendMessage(new RescanUploadQueueMessage());	
+			}
 			sendMessage(new RescanFileQueueMessage());	
 		}
 		
@@ -269,6 +274,11 @@ package tileloader.controller
 		 * File resize complete handler
 		 */
 		public function onImageUploaded(message:UploadImageMessage):void {
+			if (0 == sharedModel.fileList.length) {
+				//All files uploaded
+				sendMessage(new StopUploadMessage(StopUploadMessage.FINISHED));
+				return;
+			}
 			sendMessage(new RescanUploadQueueMessage());	
 		}
 		

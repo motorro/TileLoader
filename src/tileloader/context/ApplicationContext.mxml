@@ -15,7 +15,7 @@
 			import tileloader.controller.RescanUploadQueueCommand;
 			import tileloader.controller.ResizeImageCommand;
 			import tileloader.controller.StartUploadCommand;
-			import tileloader.controller.UploadCancelledByUserCommand;
+			import tileloader.controller.StopUploadCommand;
 			import tileloader.controller.UploadImageCommand;
 			import tileloader.model.UploadProgressModel;
 		]]>
@@ -38,7 +38,7 @@
 		<DynamicCommand type="{RescanFileQueueCommand}"/>
 		<DynamicCommand type="{ResizeImageCommand}"/>
 		<DynamicCommand type="{StartUploadCommand}"/>
-		<DynamicCommand type="{UploadCancelledByUserCommand}"/>
+		<DynamicCommand type="{StopUploadCommand}"/>
 		<DynamicCommand type="{RescanUploadQueueCommand}"/>
 		<DynamicCommand type="{UploadImageCommand}"/>
 	</fx:Declarations>
