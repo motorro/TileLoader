@@ -1,6 +1,7 @@
 package tileloader.model
 {
 	import flash.display.Bitmap;
+	import flash.net.URLRequest;
 	
 	import tileloader.messages.ImageEvent;
 	import tileloader.model.VO.ImageFormatFileVO;
@@ -63,7 +64,7 @@ package tileloader.model
 			if (null != value) {
 				var file:ImageFormatFileVO; 
 				if (null != imageVO.formats && null != (file = ImageFormatFileVO(imageVO.formats[config.thumbnailFormat]))) {
-					thumbnail = file.file.nativePath;
+					thumbnail = new URLRequest(file.file.url);
 					return;
 				}
 				
@@ -79,7 +80,7 @@ package tileloader.model
 			//Watch when thumbnail format becomes available and set icon
 			if (config.thumbnailFormat.id != event.imageFormat.id) return;
 			
-			thumbnail = ImageFormatFileVO(imageVO.formats[config.thumbnailFormat]).file.nativePath;
+			thumbnail = new URLRequest(ImageFormatFileVO(imageVO.formats[config.thumbnailFormat]).file.url);
 		}
 	}
 }
