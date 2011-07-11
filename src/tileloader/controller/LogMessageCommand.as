@@ -32,7 +32,7 @@ package tileloader.controller
 			}
 			log.push(message.message);
 			
-			CONFIG::LOGGING {
+			CONFIG::DEBUG {
 				trace (message.message);
 			}
 			

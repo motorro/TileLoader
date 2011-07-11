@@ -54,9 +54,6 @@
 			 * Application entry point
 			 */
 			private function checkAndRun():void {
-				if (null == model) return;
-				if (null == workflow) return;
-				
 				workflow.run();
 			}
 			
@@ -106,7 +103,7 @@
 			<parsley:Inject property="errorHandler" type="{ErrorHandler}"/>
 		</parsley:FastInject>
 	</fx:Declarations>
-	<view:DropZone left="10" right="10" top="10" bottom="40" contentBackgroundAlpha="0.6"
+	<view:DropZone left="10" right="10" top="59" bottom="40" contentBackgroundAlpha="0.6"
 				   contentBackgroundColor="#D2F0F9">
 	</view:DropZone>
 	<s:Button x="10" y="418" width="400" label="@Resource(key='btnUploadCaption', bundle='interface')">
@@ -116,4 +113,12 @@
 			]]>
 		</s:click>
 	</s:Button>
+	<s:Label x="10" y="9" text="Order token:"/>
+	<s:TextInput id="edtToken" x="10" y="29" width="402">
+		<s:change>
+			<![CDATA[
+				model.updateOrderToken(edtToken.text);
+			]]>
+		</s:change>
+	</s:TextInput>
 </s:WindowedApplication>

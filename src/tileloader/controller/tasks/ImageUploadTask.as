@@ -1,5 +1,6 @@
 package tileloader.controller.tasks
 {
+	import flash.events.DataEvent;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -7,6 +8,7 @@ package tileloader.controller.tasks
 	import flash.filesystem.File;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
 	
 	import mx.logging.ILogger;
 	
@@ -81,9 +83,20 @@ package tileloader.controller.tasks
 			file.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
 			file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
 			file.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
+
+			CONFIG::DEBUG {
+				file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, onCompleteData, false, 0, true);
+			}
 			
 			var request:URLRequest = new URLRequest(_scriptUrl);
-			request.data = {order:_order, format:_file.format.id, filename:model.fileInProgress.path.name, orientation:model.fileInProgress.orientation};
+			
+			var requestVars:URLVariables = new URLVariables();
+			requestVars.order = _order;
+			requestVars.format = _file.format.id;
+			requestVars.originalFilename = model.fileInProgress.path.name;
+			requestVars.orientation = model.fileInProgress.orientation;
+			request.data = requestVars;
+			
 			request.method = URLRequestMethod.POST;
 			
 			file.upload(request);
@@ -99,6 +112,21 @@ package tileloader.controller.tasks
 				_logger.info("Uploaded");
 			}
 			complete();
+		}
+		
+		CONFIG::DEBUG {
+			/**
+			 * @private
+			 * Upload complete data received 
+			 */
+			private function onCompleteData(event:DataEvent):void {
+				var file:File = _file.file;
+				file.removeEventListener(DataEvent.UPLOAD_COMPLETE_DATA, onCompleteData);
+	
+				if (null != _logger) {
+					_logger.info("Upload data: " + event.data);
+				}
+			}
 		}
 		
 		/**
