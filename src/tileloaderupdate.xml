@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
+	<versionNumber>0.0.1</versionNumber>
+	<url>http://www.motorro.com/tiles/TileLoader.air</url>
+	<description>
+		<![CDATA[
+			Sample update
+		]]>
+	</description>
+</update>

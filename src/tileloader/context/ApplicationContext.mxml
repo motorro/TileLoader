@@ -6,6 +6,7 @@
 	<fx:Script>
 		<![CDATA[
 			import tileloader.controller.AuthenticateCommand;
+			import tileloader.controller.CheckForUpdatesCommand;
 			import tileloader.controller.ConfigCommand;
 			import tileloader.controller.ExitCommand;
 			import tileloader.controller.FileAddCommand;
@@ -27,6 +28,7 @@
 		<model:AuthenticationModel/>
 		<model:ResizerModel/>
 		<model:UploaderModel/>
+		<controller:ErrorHandler/>
 		<controller:WorkflowController/>
 		<DynamicObject type="{UploadProgressModel}"/>
 		<DynamicCommand	type="{LogMessageCommand}"/>
@@ -41,5 +43,6 @@
 		<DynamicCommand type="{StopUploadCommand}"/>
 		<DynamicCommand type="{RescanUploadQueueCommand}"/>
 		<DynamicCommand type="{UploadImageCommand}"/>
+		<DynamicCommand type="{CheckForUpdatesCommand}"/>
 	</fx:Declarations>
 </Objects>

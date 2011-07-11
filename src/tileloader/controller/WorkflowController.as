@@ -13,6 +13,7 @@ package tileloader.controller
 	import tileloader.log.LogUtils;
 	import tileloader.messages.AuthResultMessage;
 	import tileloader.messages.AuthenticateMessage;
+	import tileloader.messages.CheckForUpdatesMessage;
 	import tileloader.messages.ConfigMessage;
 	import tileloader.messages.ConfigResultMessage;
 	import tileloader.messages.ExitMessage;
@@ -27,6 +28,7 @@ package tileloader.controller
 	import tileloader.messages.UploadImageMessage;
 	import tileloader.model.ApplicationConfig;
 	import tileloader.model.AuthenticationModel;
+	import tileloader.model.GlobalConstants;
 	import tileloader.model.ResizerModel;
 	import tileloader.model.SharedModel;
 	import tileloader.model.UploaderModel;
@@ -104,6 +106,10 @@ package tileloader.controller
 				_logger.info("Application start");
 			}
 			
+			//Check for updates
+			sendMessage(new CheckForUpdatesMessage(GlobalConstants.UPDATE_CHECK_URL));
+			
+			//Configure
 			sendMessage(new ConfigMessage());
 		}
 		

@@ -17,6 +17,7 @@
 			import mx.logging.Log;
 			
 			import tileloader.context.ApplicationContext;
+			import tileloader.controller.ErrorHandler;
 			import tileloader.controller.WorkflowController;
 			import tileloader.log.LogUtils;
 			import tileloader.model.MainViewModel;
@@ -33,6 +34,12 @@
 			 * Workflow controller
 			 */
 			public var workflow:WorkflowController;
+			
+			/**
+			 * @private
+			 * Error handler reference
+			 */
+			public var errorHandler:ErrorHandler;
 			
 			/**
 			 * @private
@@ -66,18 +73,9 @@
 			 * Global exception handler
 			 */
 			private function onGlobalError(event:UncaughtErrorEvent):void {
-				var logger:ILogger = LogUtils.getLoggerByObject(this);
-				if (false == logger) return;
+				if (null == errorHandler) return;
 				
-				if (event.error is Error){
-					var error:Error = event.error as Error;
-					logger.error(error.message);
-				} else if (event.error is ErrorEvent) {
-					var errorEvent:ErrorEvent = event.error as ErrorEvent;
-					logger.error(errorEvent.text);
-				} else {
-					logger.error(error.toString());
-				}
+				errorHandler.handleError(event, this);
 			}
 		]]>
 	</fx:Script>
@@ -102,9 +100,11 @@
 		
 		<parsley:Configure targets="{[logTarget]}"/>
 		
-		<parsley:FastInject property="model" type="{MainViewModel}" injectionComplete="checkAndRun()"/> 
-		<parsley:FastInject property="workflow" type="{WorkflowController}" injectionComplete="checkAndRun()"/> 
-		
+		<parsley:FastInject injectionComplete="checkAndRun()">
+			<parsley:Inject property="model" type="{MainViewModel}"/>
+			<parsley:Inject property="workflow" type="{WorkflowController}"/>
+			<parsley:Inject property="errorHandler" type="{ErrorHandler}"/>
+		</parsley:FastInject>
 	</fx:Declarations>
 	<view:DropZone left="10" right="10" top="10" bottom="40" contentBackgroundAlpha="0.6"
 				   contentBackgroundColor="#D2F0F9">
