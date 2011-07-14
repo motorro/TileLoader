@@ -256,6 +256,30 @@ package tileloader.controller
 			sendMessage(new RescanFileQueueMessage());	
 		}
 		
+		[CommandError]
+		/**
+		 * @private 
+		 * File resize error
+		 */
+		public function onResizeError(fault:ErrorEvent, message:ResizeImageMessage):void {
+			var listener:Function = function(event:CloseEvent):void {
+				if (null == event || Alert.NO == event.detail) {
+					//TODO: Log output
+					sendMessage(new ExitMessage(ExitMessages.DISK_OPERATION_ERROR));
+					return;
+				} 
+			}
+			
+			if (null != _logger) {
+				_logger.error("Resize error: " + fault.text);
+			}
+			
+			var rm:IResourceManager = ResourceManager.getInstance();
+			
+			Alert.show(rm.getString("messages", "resizeError", [fault.text]), rm.getString("messages", 'resizeErrorTitle'), Alert.YES | Alert.NO, null, listener);
+		}
+		
+		
 		[CommandComplete]
 		/**
 		 * @private 
@@ -287,6 +311,31 @@ package tileloader.controller
 			}
 			sendMessage(new RescanUploadQueueMessage());	
 		}
+		
+		[CommandError]
+		/**
+		 * @private 
+		 * File upload error
+		 */
+		public function onImageUploadError(fault:ErrorEvent, message:UploadImageMessage):void {
+			var listener:Function = function(event:CloseEvent):void {
+				if (null == event || Alert.NO == event.detail) {
+					//TODO: Log output
+					sendMessage(new ExitMessage(ExitMessages.NETWORK_ERROR));
+					return;
+				} 
+			}
+			
+			if (null != _logger) {
+				_logger.error("Upload error: " + fault.text);
+			}
+			
+			var rm:IResourceManager = ResourceManager.getInstance();
+			
+			Alert.show(rm.getString("messages", "uploadError", [fault.text]), rm.getString("messages", 'uploadErrorTitle'), Alert.YES | Alert.NO, null, listener);
+		}
+		
+		
 		
 
 	}

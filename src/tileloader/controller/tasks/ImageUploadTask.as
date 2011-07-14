@@ -73,10 +73,6 @@ package tileloader.controller.tasks
 		 * @inheritDoc 
 		 */
 		override protected function doStart():void {
-			if (null != _logger) {
-				_logger.info("Uploading image to: " + _scriptUrl);
-			}
-
 			var model:UploaderModel = UploaderModel(data);
 			
 			var file:File = _file.file;
@@ -84,6 +80,10 @@ package tileloader.controller.tasks
 			file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
 			file.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
 
+			if (null != _logger) {
+				_logger.info("Uploading image " + file.name + " to: " + _scriptUrl);
+			}
+			
 			CONFIG::DEBUG {
 				file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, onCompleteData, false, 0, true);
 			}
@@ -99,7 +99,19 @@ package tileloader.controller.tasks
 			
 			request.method = URLRequestMethod.POST;
 			
-			file.upload(request);
+			try {
+				file.upload(request);
+			} catch (e:Error) {
+				unsubscribeEvents();
+				CONFIG::DEBUG {
+					file.removeEventListener(DataEvent.UPLOAD_COMPLETE_DATA, onCompleteData);
+				}
+				var message:String = "Error uploading file: " + e.message;
+				if (null != _logger) {
+					_logger.error(message);
+				}
+				error(message);
+			}
 		}
 		
 		/**

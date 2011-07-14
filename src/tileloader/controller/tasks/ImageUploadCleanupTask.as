@@ -30,6 +30,7 @@ package tileloader.controller.tasks
 			var model:UploaderModel = UploaderModel(data);
 			
 			//TODO: Uploader cleanup here
+			model.fileInProgress = null;
 			
 			complete();
 		}

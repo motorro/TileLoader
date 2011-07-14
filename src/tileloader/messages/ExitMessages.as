@@ -21,5 +21,11 @@ package tileloader.messages
 		 * Disk operation error 
 		 */
 		public static const DISK_OPERATION_ERROR:int = 200;
+	
+		/**
+		 * Disk operation error 
+		 */
+		public static const NETWORK_ERROR:int = 300;
+
 	}
 }
