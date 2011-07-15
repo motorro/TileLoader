@@ -1,7 +1,7 @@
 <languageVersion : 1.0;>
 
 kernel BilinearResample
-<   namespace : "com.brooksandrus.pixelbender";
+<   namespace : "tileloader.resize";
     vendor : "motorro";
     version : 1;
 >
@@ -15,7 +15,7 @@ kernel BilinearResample
     
     parameter float2 shift
     <
-        defaultValue:float2(0.0,0.0);
+        defaultValue: float2(0.0,0.0);
     >;
     
     input image4 src;

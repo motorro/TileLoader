@@ -1,0 +1,28 @@
+<languageVersion : 1.0;>
+kernel LosslessRotator180
+<   namespace : "tileloader.resize";
+    vendor : "motorro";
+    version : 1;
+	description : "Lossless rotate 180 degrees counterclickwise";
+>
+{
+    parameter float width
+    <
+        description: "Resulting image width";
+    >;
+
+    parameter float height
+    <
+        description: "Resulting image height";
+    >;
+
+    input image4 src;
+    output pixel4 dst;
+
+    void
+    evaluatePixel()
+    {
+		float2 dstCoord = outCoord();
+        dst = sampleLinear( src, float2(width - dstCoord.x, height - dstCoord.y));
+    }
+}

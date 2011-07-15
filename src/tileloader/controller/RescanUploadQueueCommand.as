@@ -66,7 +66,7 @@ package tileloader.controller
 				
 				//Found complete image
 				if (null != _logger) {
-					_logger.info("Found image to upload: " + image.path.nativePath);
+					_logger.info("Found image to upload: " + image.path.name);
 				}
 				sendMessage(new UploadImageMessage(image));
 				break;

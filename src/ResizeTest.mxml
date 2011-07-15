@@ -8,6 +8,7 @@
 			import cmodule.aircall.CLibInit;
 			
 			import tileloader.resize.BenderImageResizer;
+			import tileloader.resize.BenderLosslessImageRotator;
 			import tileloader.resize.ImageFitType;
 			import tileloader.resize.ResizeJob;
 		]]>
@@ -31,12 +32,20 @@
 				var src:BitmapData = source.bitmapData;
 				var job:ResizeJob;			
 
-				while (--numOfResize >= 0) {
-					job = BenderImageResizer.resize(src, Math.floor(src.width / 2), Math.floor(src.height / 2), scale.selectedItem.data);
-					trace ("Resizing to: " + job.output.width + "x" + job.output.height);
+				var angle:Number = Number(a.text);
+				if (angle) {
+					job = BenderLosslessImageRotator.rotate(src, angle);
+					trace ("Rotating to: " + job.output.width + "x" + job.output.height);
 					job.job.start(true);
 					src = job.output;
-				}	
+				}
+							
+//				while (--numOfResize >= 0) {
+//					job = BenderImageResizer.resize(src, Math.floor(src.width / 2), Math.floor(src.height / 2), scale.selectedItem.data);
+//					trace ("Resizing to: " + job.output.width + "x" + job.output.height);
+//					job.job.start(true);
+//					src = job.output;
+//				}	
 
 				job = BenderImageResizer.resize(src, Number(w.text), Number(h.text), scale.selectedItem.data);
 				trace ("Resizing to: " + job.output.width + "x" + job.output.height);
@@ -74,4 +83,5 @@
 			]]>
 		</s:click>
 	</s:Button>
+	<s:TextInput id="a" x="557" y="10" text="90"/>
 </s:WindowedApplication>
