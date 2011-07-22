@@ -18,14 +18,13 @@ package tileloader.controller.tasks
 	 * @author kochetkov
 	 * 
 	 */
-	public class ImageRemoveTask extends Task {
+	public class ImageRemoveTask extends RetriableTask {
 		/**
 		 * @private
 		 * Logger 
 		 */
 		private static var _logger:ILogger = LogUtils.getLoggerByClass(ImageRemoveTask);
-
-
+		
 		/**
 		 * @private
 		 * File list reference 
@@ -58,7 +57,7 @@ package tileloader.controller.tasks
 		/**
 		 * @inheritDoc 
 		 */
-		override protected function doStart():void {
+		override protected function doRetryStart():void {
 			if (null != _logger) {
 				_logger.info("Removing image: " + _image.path.nativePath);
 			}
@@ -75,6 +74,7 @@ package tileloader.controller.tasks
 				if (false == format.file.exists) continue;
 				try {
 					format.file.deleteFile();
+					format
 				} catch (e:Error) {
 					var message:String = "Can't delete file: " + e.message;
 					if (null != _logger) {
@@ -86,7 +86,5 @@ package tileloader.controller.tasks
 			
 			complete();
 		}
-		
-		
 	}
 }

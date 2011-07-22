@@ -10,17 +10,17 @@ package tileloader.resize
 		/**
 		 * 90 degrees lossless rotation 
 		 */
-		public static const ROTATE_90:int = 90;
+		public static const ROTATE_90:String = "90";
 		
 		/**
 		 * 180 degrees lossless rotation 
 		 */
-		public static const ROTATE_180:int = 180;
+		public static const ROTATE_180:String = "180";
 
 		/**
 		 * 270 degrees lossless rotation 
 		 */
-		public static const ROTATE_270:int = 270;
+		public static const ROTATE_270:String = "270";
 		
 		[Embed ( source="rotator90.pbj", mimeType="application/octet-stream" ) ]
 		/**
@@ -49,7 +49,7 @@ package tileloader.resize
 		 * @param rotation Rotation angle (90, 180 or 270)
 		 * @return Created ShaderJob/BitmapData pair for the operation
 		 */
-		public static function rotate(input:BitmapData, rotation:Number):ResizeJob {
+		public static function rotate(input:BitmapData, rotation:String):ResizeJob {
 
 			var outputWidth:Number;
 			var outputHeight:Number;

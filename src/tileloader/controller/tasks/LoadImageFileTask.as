@@ -8,6 +8,8 @@ package tileloader.controller.tasks
 	import flash.filesystem.File;
 	import flash.net.URLRequest;
 	
+	import jp.shichiseki.exif.ExifLoader;
+	
 	import mx.logging.ILogger;
 	
 	import org.spicefactory.lib.task.Task;
@@ -59,7 +61,7 @@ package tileloader.controller.tasks
 			var model:ResizerModel = ResizerModel(data);
 			var loader:Loader = model.original;
 			if (null == loader) {
-				model.original = loader = new Loader();
+				model.original = loader = new ExifLoader();
 			}
 			
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete, false, 0, true);

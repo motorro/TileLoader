@@ -1,7 +1,11 @@
 package tileloader.controller.tasks
 {
+	import mx.logging.ILogger;
+	
 	import org.spicefactory.lib.task.Task;
 	
+	import tileloader.log.LogUtils;
+	import tileloader.messages.ImageEvent;
 	import tileloader.model.ResizerModel;
 	
 	/**
@@ -12,6 +16,12 @@ package tileloader.controller.tasks
 	 */
 	public class ImageResizeCleanupTask extends Task
 	{
+		/**
+		 * @private
+		 * Logger 
+		 */
+		private static var _logger:ILogger = LogUtils.getLoggerByClass(ImageResizeCleanupTask);
+
 		/**
 		 * Constructor 
 		 */
@@ -30,18 +40,14 @@ package tileloader.controller.tasks
 		override protected function doStart():void {
 			var model:ResizerModel = ResizerModel(data);	
 			
-			model.original.unload();
-			model.original = null;
+			model.imageInProgress.resizeComplete = true;
+			model.imageInProgress.dispatchEvent(new ImageEvent(ImageEvent.RESIZE_COMPLETE));
 			
-			model.fileInProgress.complete = true;
-			model.fileInProgress = null;
+			model.initialize();
 			
-			if (null != model.output) {
-				model.output.dispose();
-				model.output = null;
+			if (null != _logger) {
+				_logger.info("Resize complete.");
 			}
-			
-			model.encoded = null;
 			
 			complete();
 		}

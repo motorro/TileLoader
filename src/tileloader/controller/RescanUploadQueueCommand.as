@@ -51,6 +51,13 @@ package tileloader.controller
 				_logger.info("Rescanning image queue...");
 			}
 			
+			if (uploaderModel.sufferingError) {
+				if (null != _logger) {
+					_logger.info("Uploader in error state. Waiting till error is cleared.");
+				}
+				return;
+			}
+
 			if (uploaderModel.working) {
 				if (null != _logger) {
 					_logger.info("Uploader busy. Waiting till upload complete.");
@@ -62,7 +69,7 @@ package tileloader.controller
 			
 			for (var i:int = 0; i < queue.length; ++i) {
 				var image:ImageVO = ImageVO(queue[i]);
-				if (false == image.complete) continue;
+				if (false == image.resizeComplete) continue;
 				
 				//Found complete image
 				if (null != _logger) {

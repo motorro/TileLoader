@@ -13,6 +13,7 @@ package tileloader.controller.tasks
 	import tileloader.model.ResizerModel;
 	import tileloader.model.VO.ImageFormatVO;
 	import tileloader.resize.BenderImageResizer;
+	import tileloader.resize.ImageFitType;
 	import tileloader.resize.ImageResizer;
 	import tileloader.resize.ImageResizerEvent;
 	import tileloader.resize.ResizeJob;
@@ -83,22 +84,31 @@ package tileloader.controller.tasks
 			_resizer.addEventListener(ImageResizerEvent.COMPLETE, onComplete);
 			_resizer.addEventListener(ErrorEvent.ERROR, onError);
 			
+			var source:BitmapData = whichOne();
+			if (null != _logger) {
+				_logger.info("Using " + (source === original ? "original" : "previous") + " image as source");	
+			}
+			
 			_resizer.resize(whichOne(), _format.targetWidth, _format.targetHeight, _format.fit, _format.resizeType);
 			
 			//Sets original BitmapData to use in an effort to use formats sorted by square
 			function whichOne():BitmapData {
-				var previous:BitmapData = model.output;
+				var previous:ImageFormatVO = model.outputFormat;
 				
 				//No previous step - use original
 				if (null == previous) return original;
 				
 				//Required format is bigger than processed
-				if (_format.targetWidth * _format.targetHeight > previous.width * previous.height) return original;
+				if (_format.targetWidth * _format.targetHeight > previous.targetWidth * previous.targetHeight) return original;
 				
-				//Return original if aspect ratios are different
-				if (Math.abs(_format.targetWidth / _format.targetHeight - previous.width / previous.height) > 0.01) return original;
+				//Required format fit is IMAGE, original is WINDOW
+				if (ImageFitType.FIT_IMAGE == _format.fit && ImageFitType.FIT_WINDOW == previous.fit) return original;
 				
-				return previous;
+				//Return original if previous target dimensions are less than current
+				if (previous.targetWidth < _format.targetWidth || previous.targetHeight < _format.targetHeight) return original; 	
+				
+				//Use result of previous resize
+				return model.output;
 			}
 		}
 		
@@ -116,6 +126,7 @@ package tileloader.controller.tasks
 			}
 			
 			ResizerModel(data).output = event.bitmapData;
+			ResizerModel(data).outputFormat = _format;
 			
 			disposeResizer();
 			
@@ -128,7 +139,7 @@ package tileloader.controller.tasks
 		 */
 		private function onError(event:ErrorEvent):void {
 			disposeResizer();
-			var message:String = "Original is not valid bitmap";
+			var message:String = "Resize error: " + event.text;
 			if (null != _logger) {
 				_logger.error(message);
 			}

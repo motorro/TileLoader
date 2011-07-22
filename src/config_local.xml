@@ -3,22 +3,22 @@
 	<TileLoader>
 		<authURL>
 			<![CDATA[
-				http://photogrid.photocafe.ru/auth.php			
+				http://tiles/authenticate.php			
 			]]>
 		</authURL>
 		<albumListURL>
 			<![CDATA[
-				http://photogrid.photocafe.ru/albumList.php			
+				http://tiles/albumlist.php			
 			]]>
 		</albumListURL>
 		<imageFormatConfigURL>
 			<![CDATA[
-				http://photogrid.photocafe.ru/imageformats.xml			
+				http://tiles/imageformats.xml			
 			]]>
 		</imageFormatConfigURL>
 		<imageUploadURL>
 			<![CDATA[
-				http://photogrid.photocafe.ru/upload.php				
+				http://tiles/upload.php			
 			]]>
 		</imageUploadURL>
 	</TileLoader>	

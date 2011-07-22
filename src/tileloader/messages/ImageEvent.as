@@ -13,20 +13,40 @@ package tileloader.messages
 	public class ImageEvent extends Event {
 		
 		/**
-		 * Image format complete 
+		 * Image resize starts
+		 */
+		public static const RESIZE_START:String = "resizeStart";
+
+		/**
+		 * Image resize complete 
+		 */
+		public static const FORMAT_RESIZE_COMPLETE:String = "formatResizeComplete";
+		
+		/**
+		 * Resize complete 
 		 */
 		public static const RESIZE_COMPLETE:String = "resizeComplete";
-		
+
 		/**
 		 * Image format resize failure 
 		 */
 		public static const RESIZE_FAILED:String = "resizeFailed";
 
 		/**
+		 * Image upload start 
+		 */
+		public static const UPLOAD_START:String = "uploadStart";
+
+		/**
 		 * Image upload complete 
 		 */
 		public static const UPLOAD_COMPLETE:String = "uploadComplete";
 		
+		/**
+		 * Image format upload complete 
+		 */
+		public static const FORMAT_UPLOAD_COMPLETE:String = "formatUploadComplete";
+
 		/**
 		 * Image upload failed 
 		 */

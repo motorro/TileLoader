@@ -2,6 +2,7 @@ package tileloader.controller.tasks
 {
 	import org.spicefactory.lib.task.Task;
 	
+	import tileloader.messages.ImageEvent;
 	import tileloader.model.UploaderModel;
 	
 	/**
@@ -29,8 +30,10 @@ package tileloader.controller.tasks
 		override protected function doStart():void {
 			var model:UploaderModel = UploaderModel(data);
 			
-			//TODO: Uploader cleanup here
-			model.fileInProgress = null;
+			model.imageInProgress.isBeingUploaded = false;
+			model.imageInProgress.dispatchEvent(new ImageEvent(ImageEvent.UPLOAD_COMPLETE));
+			
+			model.initialize();
 			
 			complete();
 		}

@@ -16,7 +16,7 @@ package tileloader.model
 		public var uploading:Boolean;
 		
 		[Bindable]
-		[CommandStatus(type="tileloader.controller.UploadImageCommand")]
+		[CommandStatus(type="tileloader.messages.UploadImageMessage")]
 		/**
 		 * Upload in progress flag 
 		 */
@@ -24,8 +24,24 @@ package tileloader.model
 		
 		[Bindable]
 		/**
+		 * Indicates that uploader suffers error
+		 */
+		public var sufferingError:Boolean;
+		
+		[Bindable]
+		/**
 		 * Current file being resized 
 		 */
-		public var fileInProgress:ImageVO; 
+		public var imageInProgress:ImageVO; 
+		
+		[Init]
+		/**
+		 * Initializes model and removes any temporary data 
+		 */
+		public function initialize():void {
+			
+			imageInProgress = null;
+			
+		}
 	}
 }

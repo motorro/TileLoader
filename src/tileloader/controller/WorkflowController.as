@@ -186,7 +186,9 @@ package tileloader.controller
 					//TODO: Log output
 					sendMessage(new ExitMessage(ExitMessages.DISK_OPERATION_ERROR));
 					return;
-				} 
+				} else {
+					sendMessage(message);
+				}
 			}
 			
 			if (null != _logger) {
@@ -222,7 +224,9 @@ package tileloader.controller
 					//TODO: Log output
 					sendMessage(new ExitMessage(ExitMessages.CONFIG_ERROR));
 					return;
-				} 
+				} else {
+					sendMessage(message);
+				}
 			}
 			
 			if (null != _logger) {
@@ -249,6 +253,9 @@ package tileloader.controller
 		 * File resize complete handler
 		 */
 		public function onFileResized(message:ResizeImageMessage):void {
+			//Clear error flag if was set before
+			resizerModel.sufferingError = false;
+
 			//Upload new file if in upload state
 			if (uploaderModel.uploading) {
 				sendMessage(new RescanUploadQueueMessage());	
@@ -267,12 +274,17 @@ package tileloader.controller
 					//TODO: Log output
 					sendMessage(new ExitMessage(ExitMessages.DISK_OPERATION_ERROR));
 					return;
+				} else {
+					sendMessage(message);
 				} 
 			}
 			
 			if (null != _logger) {
 				_logger.error("Resize error: " + fault.text);
 			}
+			
+			//Set error flag
+			resizerModel.sufferingError = true;
 			
 			var rm:IResourceManager = ResourceManager.getInstance();
 			
@@ -304,6 +316,9 @@ package tileloader.controller
 		 * File resize complete handler
 		 */
 		public function onImageUploaded(message:UploadImageMessage):void {
+			//Clear error flag if was set before
+			uploaderModel.sufferingError = false;
+
 			if (0 == sharedModel.fileList.length) {
 				//All files uploaded
 				sendMessage(new StopUploadMessage(StopUploadMessage.FINISHED));
@@ -323,6 +338,8 @@ package tileloader.controller
 					//TODO: Log output
 					sendMessage(new ExitMessage(ExitMessages.NETWORK_ERROR));
 					return;
+				} else {
+					sendMessage(message);
 				} 
 			}
 			
@@ -330,13 +347,12 @@ package tileloader.controller
 				_logger.error("Upload error: " + fault.text);
 			}
 			
+			//Set error flag
+			uploaderModel.sufferingError = true;
+
 			var rm:IResourceManager = ResourceManager.getInstance();
 			
 			Alert.show(rm.getString("messages", "uploadError", [fault.text]), rm.getString("messages", 'uploadErrorTitle'), Alert.YES | Alert.NO, null, listener);
 		}
-		
-		
-		
-
 	}
 }

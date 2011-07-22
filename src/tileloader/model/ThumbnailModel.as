@@ -62,12 +62,10 @@ package tileloader.model
 			imageVO = value;
 			
 			if (null != value) {
-				var file:ImageFormatFileVO; 
-				if (null != imageVO.formats && null != (file = ImageFormatFileVO(imageVO.formats[config.thumbnailFormat]))) {
-					thumbnail = new URLRequest(file.file.url);
-					return;
+				if (null != imageVO.thumbnail) {
+					thumbnail = imageVO.thumbnail;
+					return;					
 				}
-				
 				imageVO.addEventListener(ImageEvent.RESIZE_COMPLETE, onImageResizeComplete);
 			}
 		}
@@ -77,10 +75,7 @@ package tileloader.model
 		 * Resize complete handler
 		 */
 		private function onImageResizeComplete(event:ImageEvent):void {
-			//Watch when thumbnail format becomes available and set icon
-			if (config.thumbnailFormat.id != event.imageFormat.id) return;
-			
-			thumbnail = new URLRequest(ImageFormatFileVO(imageVO.formats[config.thumbnailFormat]).file.url);
+			thumbnail = ImageVO(event.target).thumbnail;
 		}
 	}
 }

@@ -13,7 +13,10 @@ package tileloader.controller.tasks
 	
 	import tileloader.log.LogUtils;
 	import tileloader.model.ApplicationConfig;
+	import tileloader.model.GlobalConstants;
 	import tileloader.model.VO.ImageFormatVO;
+	import tileloader.resize.ImageFitType;
+	import tileloader.resize.ImageResizeType;
 	
 	/**
 	 * Loads image configuration data
@@ -60,6 +63,10 @@ package tileloader.controller.tasks
 			
 			function onLoadComplete(event:Event):void {
 				try {
+					
+					var i:int;
+					var format:ImageFormatVO;
+					
 					var content:XML = XML(loader.data);
 					
 					var imageData:XMLList = content.TileLoader.imageFormat;
@@ -75,7 +82,7 @@ package tileloader.controller.tasks
 					var imageConfig:Vector.<ImageFormatVO> = new Vector.<ImageFormatVO>(imageData.length(), true);
 					
 					//Create a VO for each format in configuration file
-					var i:int = imageData.length();
+					i = imageData.length();
 					while (--i >= 0) {
 						var formatData:XML = imageData[i];
 						
@@ -88,10 +95,13 @@ package tileloader.controller.tasks
 							}
 						}
 						
-						var format:ImageFormatVO = new ImageFormatVO(formatData.@id.toString(), int(formatData.@width.toString()), int(formatData.@height.toString()), formatData.@fit.toString(), formatData.@type.toString());
+						format = new ImageFormatVO(formatData.@id.toString(), int(formatData.@width.toString()), int(formatData.@height.toString()), formatData.@fit.toString(), formatData.@type.toString());
 						imageConfig[i] = format;
 						if (isThumbnail) {
 							appConfig.thumbnailFormat = format;
+							if (null != _logger) {
+								_logger.info("Thumbnail format selected explicitly: " + format.id);
+							}
 						}
 					}
 					
@@ -101,9 +111,35 @@ package tileloader.controller.tasks
 						return format2.targetWidth * format2.targetHeight - format1.targetWidth * format1.targetHeight;						
 					});
 					
-					//If no format set as thumbnail explicitly - choose smallest
+					//If no format set as thumbnail explicitly - choose the one that is appropriate according to settings
 					if (null == appConfig.thumbnailFormat) {
-						appConfig.thumbnailFormat = imageConfig[imageConfig.length - 1];
+						var targetFormat:ImageFormatVO = null;
+						i = imageConfig.length;
+						while (--i >= 0) {
+							format = imageConfig[i];
+							var formatWidth:int = format.targetWidth;
+							var formatHeight:int = format.targetHeight;
+							if (	formatWidth >= GlobalConstants.THUMBNAIL_MIN_WIDTH 
+								&& 	formatWidth <= GlobalConstants.THUMBNAIL_MAX_WIDTH
+								&&	formatHeight >= GlobalConstants.THUMBNAIL_MIN_HEIGHT
+								&&	formatHeight <= GlobalConstants.THUMBNAIL_MAX_HEIGHT) {
+								targetFormat = format;
+								if (null != _logger) {
+									_logger.info("Thumbnail format selected implicitly: " + format.id);
+								}
+								break;
+							}
+						}
+						
+						//No appropriate format. Create new one
+						if (null == targetFormat) {
+							targetFormat = new ImageFormatVO("_thumbnail_", GlobalConstants.THUMBNAIL_MIN_WIDTH, GlobalConstants.THUMBNAIL_MIN_HEIGHT, ImageFitType.FIT_IMAGE, ImageResizeType.BILINEAR);
+							if (null != _logger) {
+								_logger.info("Thumbnail format created.");
+							}
+						}
+						
+						appConfig.thumbnailFormat = targetFormat;
 					}
 					
 					//Sort formats from biggest to smaller to optimize resize later

@@ -1,9 +1,11 @@
 package tileloader.model.VO
 {
-	import flash.display.BitmapData;
+	import flash.display.Bitmap;
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
 	import flash.utils.Dictionary;
+	
+	import jp.shichiseki.exif.ExifInfo;
 	
 	import mx.controls.Image;
 	import mx.core.IUID;
@@ -15,14 +17,41 @@ package tileloader.model.VO
 	 * 
 	 */
 	//TODO: Change resize errors to those events and add error state
+	/**
+	 * Image resize starts
+	 */
+	[Event (name="resizeStart", type="tileloader.messages.ImageEvent")]
+	/**
+	 * Image resize complete 
+	 */
+	[Event (name="formatResizeComplete", type="tileloader.messages.ImageEvent")]
+	/**
+	 * Resize complete 
+	 */
 	[Event (name="resizeComplete", type="tileloader.messages.ImageEvent")]
+	/**
+	 * Image format resize failure 
+	 */
 	[Event (name="resizeFailed", type="tileloader.messages.ImageEvent")]
+	/**
+	 * Image upload start 
+	 */
+	[Event (name="uploadStart", type="tileloader.messages.ImageEvent")]
+	/**
+	 * Image upload complete 
+	 */
+	[Event (name="formatUploadComplete", type="tileloader.messages.ImageEvent")]
+	/**
+	 * Image format upload complete 
+	 */
 	[Event (name="uploadComplete", type="tileloader.messages.ImageEvent")]
+	/**
+	 * Image upload failed 
+	 */
 	[Event (name="uploadFailed", type="tileloader.messages.ImageEvent")]
 	/**
 	 * Image value object 
 	 * @author kochetkov
-	 * 
 	 */
 	public class ImageVO extends EventDispatcher implements IUID {
 		
@@ -47,14 +76,39 @@ package tileloader.model.VO
 		public var orientation:String;
 		
 		/**
+		 * Image exif if available 
+		 */
+		public var exifData:ExifInfo;
+		
+		/**
 		 * Resized files 
 		 */
 		public var formats:Dictionary;
 		
 		/**
+		 * Thumbnail bitmap 
+		 */
+		public var thumbnail:Bitmap;
+		
+		/**
+		 * Image being resized flag 
+		 */
+		public var isBeingResized:Boolean;
+		
+		/**
 		 * All formats are complete flag 
 		 */
-		public var complete:Boolean;
+		public var resizeComplete:Boolean;
+
+		/**
+		 * Image being uploaded
+		 */
+		public var isBeingUploaded:Boolean;
+		
+		/**
+		 * All formats are uploaded flag 
+		 */
+		public var uploadComplete:Boolean;
 		
 		/**
 		 * Constructor

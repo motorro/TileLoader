@@ -63,7 +63,7 @@ package tileloader.controller
 			
 			for (var i:int = 0; i < queue.length; ++i) {
 				var image:ImageVO = ImageVO(queue[i]);
-				if (image.complete) continue;
+				if (image.resizeComplete) continue;
 				
 				//Found incomplete image
 				if (null != _logger) {

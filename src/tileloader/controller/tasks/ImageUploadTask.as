@@ -10,11 +10,13 @@ package tileloader.controller.tasks
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
 	
+	import jp.shichiseki.exif.ExifInfo;
+	
 	import mx.logging.ILogger;
 	
-	import org.spicefactory.lib.task.Task;
-	
 	import tileloader.log.LogUtils;
+	import tileloader.messages.ImageEvent;
+	import tileloader.model.ResizerModel;
 	import tileloader.model.UploaderModel;
 	import tileloader.model.VO.ImageFormatFileVO;
 	
@@ -24,7 +26,7 @@ package tileloader.controller.tasks
 	 * @author kochetkov
 	 * 
 	 */
-	public class ImageUploadTask extends Task {
+	public class ImageUploadTask extends RetriableTask {
 		
 		/**
 		 * @private
@@ -48,7 +50,19 @@ package tileloader.controller.tasks
 		 * @private
 		 * Encoded format reference 
 		 */
-		private var _file:ImageFormatFileVO;
+		private var _formatFile:ImageFormatFileVO;
+		
+		/**
+		 * @private
+		 * File reference 
+		 */
+		private var _file:File;
+		
+		/**
+		 * @private
+		 * Model reference 
+		 */
+		private var _model:UploaderModel;
 		
 		/**
 		 * Constructor 
@@ -61,7 +75,7 @@ package tileloader.controller.tasks
 			
 			_scriptUrl = scriptUrl;
 			_order = order;
-			_file = file;
+			_formatFile = file;
 			
 			setCancelable(false);
 			setSkippable(false);
@@ -72,39 +86,49 @@ package tileloader.controller.tasks
 		/**
 		 * @inheritDoc 
 		 */
-		override protected function doStart():void {
-			var model:UploaderModel = UploaderModel(data);
+		override protected function doRetryStart():void {
+			_model = UploaderModel(data);
 			
-			var file:File = _file.file;
-			file.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
-			file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
-			file.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
+			_file = _formatFile.file.clone();
+			_file.addEventListener(Event.COMPLETE, onComplete, false, 0, true);
+			_file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError, false, 0, true);
+			_file.addEventListener(IOErrorEvent.IO_ERROR, onError, false, 0, true);
 
 			if (null != _logger) {
-				_logger.info("Uploading image " + file.name + " to: " + _scriptUrl);
+				_logger.info("Uploading image " + _file.name + " to: " + _scriptUrl);
 			}
 			
 			CONFIG::DEBUG {
-				file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, onCompleteData, false, 0, true);
+				_file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, onCompleteData, false, 0, true);
 			}
 			
 			var request:URLRequest = new URLRequest(_scriptUrl);
 			
 			var requestVars:URLVariables = new URLVariables();
 			requestVars.order = _order;
-			requestVars.format = _file.format.id;
-			requestVars.originalFilename = model.fileInProgress.path.name;
-			requestVars.orientation = model.fileInProgress.orientation;
+			requestVars.format = _formatFile.format.id;
+			requestVars.originalFilename = _model.imageInProgress.path.name;
+			requestVars.orientation = _model.imageInProgress.orientation;
+
+			var exifData:ExifInfo = _model.imageInProgress.exifData;
+			if (null != exifData) {
+				try {
+					requestVars.exifDate = exifData.ifds.primary.DateTime;
+				} catch (e:Error) {
+					//NOOP
+				}
+			}
+			
 			request.data = requestVars;
 			
 			request.method = URLRequestMethod.POST;
 			
 			try {
-				file.upload(request);
+				_file.upload(request);
 			} catch (e:Error) {
 				unsubscribeEvents();
 				CONFIG::DEBUG {
-					file.removeEventListener(DataEvent.UPLOAD_COMPLETE_DATA, onCompleteData);
+					_file.removeEventListener(DataEvent.UPLOAD_COMPLETE_DATA, onCompleteData);
 				}
 				var message:String = "Error uploading file: " + e.message;
 				if (null != _logger) {
@@ -123,6 +147,7 @@ package tileloader.controller.tasks
 			if (null != _logger) {
 				_logger.info("Uploaded");
 			}
+			_model.imageInProgress.dispatchEvent(new ImageEvent(ImageEvent.FORMAT_UPLOAD_COMPLETE));			
 			complete();
 		}
 		
@@ -132,8 +157,7 @@ package tileloader.controller.tasks
 			 * Upload complete data received 
 			 */
 			private function onCompleteData(event:DataEvent):void {
-				var file:File = _file.file;
-				file.removeEventListener(DataEvent.UPLOAD_COMPLETE_DATA, onCompleteData);
+				_file.removeEventListener(DataEvent.UPLOAD_COMPLETE_DATA, onCompleteData);
 	
 				if (null != _logger) {
 					_logger.info("Upload data: " + event.data);
@@ -147,6 +171,9 @@ package tileloader.controller.tasks
 		 */
 		private function onError(event:ErrorEvent):void {
 			unsubscribeEvents();
+			CONFIG::DEBUG {
+				_file.removeEventListener(DataEvent.UPLOAD_COMPLETE_DATA, onCompleteData);
+			}
 			var message:String = "Error uploading file: " + event.text;
 			if (null != _logger) {
 				_logger.error(message);
@@ -159,10 +186,9 @@ package tileloader.controller.tasks
 		 * Removes event listeners from file 
 		 */
 		private function unsubscribeEvents():void {
-			var file:File = _file.file;
-			file.removeEventListener(Event.COMPLETE, onComplete);
-			file.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
-			file.removeEventListener(IOErrorEvent.IO_ERROR, onError);
+			_file.removeEventListener(Event.COMPLETE, onComplete);
+			_file.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
+			_file.removeEventListener(IOErrorEvent.IO_ERROR, onError);
 		}
 	}
 }

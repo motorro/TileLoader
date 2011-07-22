@@ -8,13 +8,16 @@ package tileloader.controller
 	import org.spicefactory.lib.task.Task;
 	import org.spicefactory.lib.task.TaskGroup;
 	
+	import tileloader.controller.tasks.CreateThumbnailTask;
 	import tileloader.controller.tasks.FormatResizeCleanupTask;
 	import tileloader.controller.tasks.ImageEncodeTask;
 	import tileloader.controller.tasks.ImageMeasureTask;
 	import tileloader.controller.tasks.ImageResizeCleanupTask;
 	import tileloader.controller.tasks.ImageResizeTask;
+	import tileloader.controller.tasks.ImageRotateTask;
 	import tileloader.controller.tasks.ImageSaveTask;
 	import tileloader.controller.tasks.LoadImageFileTask;
+	import tileloader.messages.ImageEvent;
 	import tileloader.messages.ResizeImageMessage;
 	import tileloader.model.ApplicationConfig;
 	import tileloader.model.AuthenticationModel;
@@ -56,13 +59,16 @@ package tileloader.controller
 		 * Starts image resize
 		 */
 		public function execute(message:ResizeImageMessage):Task {
-			var image:ImageVO = resizerModel.fileInProgress = message.image;
+			var image:ImageVO = resizerModel.imageInProgress = message.image;
 			
 			//Cleanup
 			if (null != resizerModel.output) {
 				resizerModel.output.dispose();
 				resizerModel.output = null;
 			}
+
+			image.isBeingResized = true;
+			image.dispatchEvent(new ImageEvent(ImageEvent.RESIZE_START));
 			
 			var result:TaskGroup = new SequentialTaskGroup("Resizing file");	
 			result.data = resizerModel;
@@ -72,6 +78,11 @@ package tileloader.controller
 			
 			//Measure original image
 			result.addTask(new ImageMeasureTask(image));
+			
+			//Add rotation command if rotation enabled
+			if (resizerModel.exifRotate) {
+				result.addTask(new ImageRotateTask());
+			}
 			
 			//Add resize task for each required format
 			for each (var format:ImageFormatVO in configModel.imageFormats) {
@@ -88,8 +99,11 @@ package tileloader.controller
 				//Save to disk task
 				result.addTask(new ImageSaveTask(imageFormat));
 				//Cleanup
-				result.addTask(new FormatResizeCleanupTask(image, imageFormat));
+				result.addTask(new FormatResizeCleanupTask(image, imageFormat, configModel.thumbnailFormat));
 			}
+			
+			//Create image thumbnail if no thumbnail found
+			result.addTask(new CreateThumbnailTask(image, configModel.thumbnailFormat));
 			
 			result.addTask(new ImageResizeCleanupTask());
 			

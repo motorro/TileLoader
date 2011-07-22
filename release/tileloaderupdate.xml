@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
-	<versionNumber>0.3.2</versionNumber>
+	<versionNumber>0.4.1</versionNumber>
 	<url>http://www.motorro.com/tiles/TileLoader.air</url>
 	<description>
 		<![CDATA[
-			- Attempt to analyze and fix error 416
-			- Error handlers added for resize and upload failures
+			- EXIF lossless rotate
+			- EXIF Date is sent (exifDate param)
+			- Concurrent errors fix and reporting
+			- Resize optimization
 		]]>
 	</description>
 </update>

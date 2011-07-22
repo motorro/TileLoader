@@ -2,6 +2,8 @@ package tileloader.controller.tasks
 {
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.events.OutputProgressEvent;
+	import flash.events.ProgressEvent;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	
@@ -37,11 +39,6 @@ package tileloader.controller.tasks
 		private var _formatFile:ImageFormatFileVO;
 		
 		/**
-		 * File stream reference 
-		 */
-		private var _fs:FileStream;
-		
-		/**
 		 * Constructor 
 		 * @param formatFile Image format storage VO
 		 */
@@ -63,48 +60,25 @@ package tileloader.controller.tasks
 				_logger.info("Saving image to: " + _formatFile.file.nativePath);
 			}
 			
-			_fs = new FileStream();
+			var fs:FileStream = new FileStream();
 			
-			_fs.addEventListener(Event.COMPLETE, onComplete);
-			_fs.addEventListener(IOErrorEvent.IO_ERROR, onError);
-			
-			_fs.open(_formatFile.file, FileMode.WRITE);
-			
-			_fs.writeBytes(ResizerModel(data).encoded, 0, ResizerModel(data).encoded.length);
-			
-			//FIXME: Async operation does not work
-			_fs.close();
-			if (null != _logger) {
-				_logger.info("Saved");
+			try {
+				fs.open(_formatFile.file.clone(), FileMode.WRITE);
+				fs.writeBytes(ResizerModel(data).encoded, 0, ResizerModel(data).encoded.length);
+				fs.close();
+				if (null != _logger) {
+					_logger.info("Saved");
+				}
+			} catch (e:Error) {
+				fs.close();
+				var message:String = "File write error: " + e.message;
+				if (null != _logger) {
+					_logger.error(message);
+				}
+				error(message);
+				return;
 			}
 			complete();
 		}
-		
-		/**
-		 * @private
-		 * File write complete handler 
-		 */
-		private function onComplete(event:Event):void {
-			_fs.close();
-			if (null != _logger) {
-				_logger.info("Saved");
-			}
-			complete();
-		}
-		
-		/**
-		 * @private 
-		 * File write error handler
-		 */
-		private function onError(event:IOErrorEvent):void {
-			_fs.close();
-			var message:String = "File write error: " + event.text;
-			if (null != _logger) {
-				_logger.error(message);
-			}
-			error(message);
-		}
-		
-		
 	}
 }

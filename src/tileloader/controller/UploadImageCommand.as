@@ -7,6 +7,7 @@ package tileloader.controller
 	import tileloader.controller.tasks.ImageRemoveTask;
 	import tileloader.controller.tasks.ImageUploadCleanupTask;
 	import tileloader.controller.tasks.ImageUploadTask;
+	import tileloader.messages.ImageEvent;
 	import tileloader.messages.UploadImageMessage;
 	import tileloader.model.ApplicationConfig;
 	import tileloader.model.AuthenticationModel;
@@ -55,7 +56,10 @@ package tileloader.controller
 		 * Starts image resize
 		 */
 		public function execute(message:UploadImageMessage):Task {
-			var image:ImageVO = uploaderModel.fileInProgress = message.image;
+			var image:ImageVO = uploaderModel.imageInProgress = message.image;
+			
+			image.isBeingUploaded = true;
+			image.dispatchEvent(new ImageEvent(ImageEvent.UPLOAD_START));
 			
 			var result:TaskGroup = new SequentialTaskGroup("Upload file");	
 			result.data = uploaderModel;
