@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<TileLoader>
+		<imageFormat id="if1" width="378" height="250" fit="window" type="bilinearIterative"/>
+		<!-- imageFormat id="if1" width="378" height="250" fit="image" type="bicubic"/ -->
+		<!-- imageFormat id="if1" width="378" height="250" fit="image" type="bilinearIterative"/ -->
+		<imageFormat id="if2" width="250" height="250" fit="window"/>
+		<imageFormat id="if3" width="122" height="122" fit="window" thumbnail="true"/>
+	</TileLoader>	
+</config>
