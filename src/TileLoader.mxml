@@ -9,9 +9,7 @@
 					   showStatusBar="false" 
 					   preinitialize="onPreinit();"
 					   applicationComplete="onAppComplete()">
-	<fx:Metadata> 
-		[ResourceBundle("interface")] 
-	</fx:Metadata>	<fx:Script>
+	<fx:Script>
 		<![CDATA[
 			import mx.logging.ILogger;
 			import mx.logging.Log;
@@ -21,13 +19,6 @@
 			import tileloader.controller.WorkflowController;
 			import tileloader.log.LogUtils;
 			import tileloader.model.MainViewModel;
-			
-			[Bindable]
-			/**
-			 * @private
-			 * Presentation model
-			 */
-			public var model:MainViewModel;
 
 			/**
 			 * @private
@@ -53,7 +44,7 @@
 			 * @private
 			 * Application entry point
 			 */
-			private function checkAndRun():void {
+			private function run():void {
 				workflow.run();
 			}
 			
@@ -97,28 +88,10 @@
 		
 		<parsley:Configure targets="{[logTarget]}"/>
 		
-		<parsley:FastInject injectionComplete="checkAndRun()">
-			<parsley:Inject property="model" type="{MainViewModel}"/>
+		<parsley:FastInject injectionComplete="run()">
 			<parsley:Inject property="workflow" type="{WorkflowController}"/>
 			<parsley:Inject property="errorHandler" type="{ErrorHandler}"/>
 		</parsley:FastInject>
 	</fx:Declarations>
-	<view:DropZone left="10" right="10" top="59" bottom="40" contentBackgroundAlpha="0.6"
-				   contentBackgroundColor="#D2F0F9">
-	</view:DropZone>
-	<s:Button x="10" y="418" width="400" label="@Resource(key='btnUploadCaption', bundle='interface')">
-		<s:click>
-			<![CDATA[
-				model.startUpload();
-			]]>
-		</s:click>
-	</s:Button>
-	<s:Label x="10" y="9" text="Order token:"/>
-	<s:TextInput id="edtToken" x="10" y="29" width="402">
-		<s:change>
-			<![CDATA[
-				model.updateOrderToken(edtToken.text);
-			]]>
-		</s:change>
-	</s:TextInput>
+	<view:MainView top="12" right="12" bottom="12" left="12"/>
 </s:WindowedApplication>
