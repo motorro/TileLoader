@@ -8,7 +8,8 @@
 					   width="422" height="450" 
 					   showStatusBar="false" 
 					   preinitialize="onPreinit();"
-					   applicationComplete="onAppComplete()">
+					   applicationComplete="onAppComplete()"
+					   currentState="{getCurrentState(authenticationModel.authenticated)}">
 	<fx:Script>
 		<![CDATA[
 			import mx.logging.ILogger;
@@ -18,8 +19,16 @@
 			import tileloader.controller.ErrorHandler;
 			import tileloader.controller.WorkflowController;
 			import tileloader.log.LogUtils;
+			import tileloader.model.AuthenticationModel;
 			import tileloader.model.MainViewModel;
 
+			[Bindable]
+			/**
+			 * @private
+			 * Reference to authentication data
+			 */
+			public var authenticationModel:AuthenticationModel;
+			
 			/**
 			 * @private
 			 * Workflow controller
@@ -31,6 +40,14 @@
 			 * Error handler reference
 			 */
 			public var errorHandler:ErrorHandler;
+			
+			/**
+			 * @private
+			 * Returns state name according to mpdel state
+			 */
+			private function getCurrentState(authenticated:Boolean):String {
+				return authenticated ? "thumbnailing" : "authentication";
+			}
 			
 			/**
 			 * @private
@@ -89,9 +106,16 @@
 		<parsley:Configure targets="{[logTarget]}"/>
 		
 		<parsley:FastInject injectionComplete="run()">
+			<parsley:Inject property="authenticationModel" type="{AuthenticationModel}"/>
 			<parsley:Inject property="workflow" type="{WorkflowController}"/>
 			<parsley:Inject property="errorHandler" type="{ErrorHandler}"/>
 		</parsley:FastInject>
+		
 	</fx:Declarations>
-	<view:MainView top="12" right="12" bottom="12" left="12"/>
+	<s:states>
+		<s:State name="authentication"/>
+		<s:State name="thumbnailing"/>
+	</s:states>
+	<view:AuthenticateView  includeIn="authentication" top="12" right="12" bottom="12" left="12"/>
+	<view:MainView includeIn="thumbnailing" top="12" right="12" bottom="12" left="12"/>
 </s:WindowedApplication>

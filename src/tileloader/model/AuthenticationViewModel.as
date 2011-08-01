@@ -13,6 +13,14 @@ package tileloader.model
 		 * Parsley event dispatcher
 		 */ 
 		public var sendMessage:Function;
+		
+		/**
+		 * Checks passed token at authorization server 
+		 * @param token String token given for upload
+		 */
+		public function checkToken(token:String):void {
+						
+		}
 
 	}
 }
