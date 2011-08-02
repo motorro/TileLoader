@@ -38,12 +38,6 @@ package tileloader.model
 		
 		[Bindable]
 		/**
-		 * Initialization flag 
-		 */
-		public var initialized:Boolean;
-		
-		[Bindable]
-		/**
 		 * Files to be processed with application 
 		 */
 		public var fileList:ArrayCollection;

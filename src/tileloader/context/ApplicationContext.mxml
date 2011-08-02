@@ -23,7 +23,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<model:SharedModel/>
-		<model:MainViewModel/>
+		<model:ThumbnailingViewModel/>
 		<model:ApplicationConfig/>
 		<model:AuthenticationModel/>
 		<model:ResizerModel/>

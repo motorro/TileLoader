@@ -9,7 +9,7 @@
 					   showStatusBar="false" 
 					   preinitialize="onPreinit();"
 					   applicationComplete="onAppComplete()"
-					   currentState="{getCurrentState(authenticationModel.authenticated)}">
+					   currentState="{getCurrentState(configurationModel.configured, authenticationModel.authenticated)}">
 	<fx:Script>
 		<![CDATA[
 			import mx.logging.ILogger;
@@ -19,8 +19,16 @@
 			import tileloader.controller.ErrorHandler;
 			import tileloader.controller.WorkflowController;
 			import tileloader.log.LogUtils;
+			import tileloader.model.ApplicationConfig;
 			import tileloader.model.AuthenticationModel;
-			import tileloader.model.MainViewModel;
+			import tileloader.model.ThumbnailingViewModel;
+
+			[Bindable]
+			/**
+			 * @private
+			 * Reference to configuration data
+			 */
+			public var configurationModel:ApplicationConfig;
 
 			[Bindable]
 			/**
@@ -45,8 +53,8 @@
 			 * @private
 			 * Returns state name according to mpdel state
 			 */
-			private function getCurrentState(authenticated:Boolean):String {
-				return authenticated ? "thumbnailing" : "authentication";
+			private function getCurrentState(configured:Boolean, authenticated:Boolean):String {
+				return configured ? (authenticated ? "thumbnailing" : "authentication") : "configuration";
 			}
 			
 			/**
@@ -106,6 +114,7 @@
 		<parsley:Configure targets="{[logTarget]}"/>
 		
 		<parsley:FastInject injectionComplete="run()">
+			<parsley:Inject property="configurationModel" type="{ApplicationConfig}"/>
 			<parsley:Inject property="authenticationModel" type="{AuthenticationModel}"/>
 			<parsley:Inject property="workflow" type="{WorkflowController}"/>
 			<parsley:Inject property="errorHandler" type="{ErrorHandler}"/>
@@ -113,9 +122,11 @@
 		
 	</fx:Declarations>
 	<s:states>
+		<s:State name="configuration"/>
 		<s:State name="authentication"/>
 		<s:State name="thumbnailing"/>
 	</s:states>
+	<view:ConfigView includeIn="configuration" top="12" right="12" bottom="12" left="12"/>
 	<view:AuthenticateView  includeIn="authentication" top="12" right="12" bottom="12" left="12"/>
-	<view:MainView includeIn="thumbnailing" top="12" right="12" bottom="12" left="12"/>
+	<view:ThumbnailingView includeIn="thumbnailing" top="12" right="12" bottom="12" left="12"/>
 </s:WindowedApplication>

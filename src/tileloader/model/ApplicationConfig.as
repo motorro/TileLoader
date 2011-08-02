@@ -10,6 +10,12 @@ package tileloader.model
 	 * 
 	 */	
 	public class ApplicationConfig {
+		[Bindable]
+		/**
+		 * Initialization flag 
+		 */
+		public var configured:Boolean;
+
 		/**
 		 * User authenticating URL 
 		 */

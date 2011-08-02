@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:parsley="http://www.spicefactory.org/parsley">
+	<fx:Metadata> 
+		[ResourceBundle("interface")] 
+	</fx:Metadata>	
+	<fx:Script>
+		<![CDATA[
+			import tileloader.context.ConfigContext;
+			import tileloader.model.ConfigViewModel;
+			
+			[Bindable]
+			/**
+			 * @private
+			 * Config view presentation model
+			 */
+			public var model:ConfigViewModel;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<parsley:ContextBuilder>
+			<parsley:FlexConfig type="{ConfigContext}"/>
+			<parsley:TaskCommandSupport/>                    
+		</parsley:ContextBuilder>
+		
+		<parsley:FastInject property="model" type="{ConfigViewModel}"/> 
+	</fx:Declarations>
+	<s:layout>
+		<s:HorizontalLayout/>
+	</s:layout>
+	<s:Label text="@Resource(key='lblConfigLoad', bundle='interface')"/>
+</s:Group>

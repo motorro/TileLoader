@@ -6,7 +6,7 @@ package tileloader.model
 	 * Main application view presentation model 
 	 * @author kochetkov
 	 */
-	public class MainViewModel {
+	public class ThumbnailingViewModel {
 		
 		[MessageDispatcher]
 		/**

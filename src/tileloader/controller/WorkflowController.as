@@ -100,7 +100,7 @@ package tileloader.controller
 		 * Starts main workflow 
 		 */
 		public function run():void {
-			sharedModel.initialized = false;
+			appConfig.configured = false;
 			
 			if (null != _logger) {
 				_logger.info("Application start");
@@ -124,7 +124,7 @@ package tileloader.controller
 			}
 			
 			sendMessage(new ConfigResultMessage(ConfigResultMessage.CONFIG_COMPLETE));
-			sharedModel.initialized = true;
+			appConfig.configured = true;
 
 			if (null != _logger) {
 				_logger.info("Authenticating.");
