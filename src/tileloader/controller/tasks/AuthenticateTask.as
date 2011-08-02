@@ -48,10 +48,8 @@ package tileloader.controller.tasks
 				_logger.info("Authenticating order: " + _order);
 			}
 			
-			//TODO: Order authentication here
-			
 			var authModel:AuthenticationModel = AuthenticationModel(data);
-			authModel.orderToken = "-=ORDER=-";
+			authModel.orderToken = _order;
 			
 			complete();
 		}

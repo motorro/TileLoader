@@ -32,11 +32,10 @@ package tileloader.model
 		 */
 		public var authenticated:Boolean; 
 		
-		//TODO: Temporal order data
 		/**
 		 * Order token that is provided from outside 
 		 */
-		public var orderToken:String = "-=ORDER=-";
+		public var orderToken:String;
 		
 		//FIXME: Temporary order token
 		public var tempToken:String = "NOT_SET"; 

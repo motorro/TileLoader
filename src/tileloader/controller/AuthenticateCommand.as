@@ -35,7 +35,7 @@ package tileloader.controller
 			var result:TaskGroup = new SequentialTaskGroup("Order authentication");	
 			result.data = model;
 			
-			//TODO: Order authentication code here
+			//TODO: Order authentication check code here?
 			
 			result.addTask(new AuthenticateTask(message.order));
 			

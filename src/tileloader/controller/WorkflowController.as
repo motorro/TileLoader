@@ -129,10 +129,10 @@ package tileloader.controller
 			if (null != _logger) {
 				_logger.info("Authenticating.");
 			}
-			//TODO: Implement authentication
+			//TODO: Implement unfinished order restore
 			
-			//For now - just clean the folder and create new one
-			sendMessage(new OrderCleanupMessage(authenticationModel.orderToken));			
+			//For now - just clean the folder
+			sendMessage(new OrderCleanupMessage(null));			
 		}
 		
 		[CommandError]
@@ -171,8 +171,7 @@ package tileloader.controller
 			sendMessage(new AuthResultMessage(AuthResultMessage.AUTH_REMOVED));
 			authenticationModel.authenticated = false;
 			
-			//Authenticate
-			sendMessage(new AuthenticateMessage("-=ORDER=-"));
+			//Wait for authentication here...
 		}
 
 		[CommandError]

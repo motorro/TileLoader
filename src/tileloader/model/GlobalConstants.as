@@ -27,6 +27,13 @@ package tileloader.model
 		public static const UPDATE_CHECK_URL:String = "http://www.motorro.com/tiles/tileloaderupdate.xml";
 		
 		/**
+		 * Folder names to exclude from total cleanup
+		 */
+		public static const FOLDER_CLEANUP_EXCLUDES:Array = [
+			"#ApplicationUpdater"
+		];
+		
+		/**
 		 * Number of task retries before failure 
 		 */
 		public static const TASK_RETRY_NUMBER:int = 3;

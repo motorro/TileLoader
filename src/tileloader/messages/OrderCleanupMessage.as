@@ -9,17 +9,17 @@ package tileloader.messages
 	public class OrderCleanupMessage {
 		
 		/**
-		 * Order to cleanup
+		 * Orders to cleanup
 		 */		
-		public var order:String;
+		public var orders:Array;
 		
 		/**
 		 * Constructor 
-		 * @param order Order to cleanup
+		 * @param orders Order names to cleanup or NULL to cleanup all orders
 		 * 
 		 */
-		public function OrderCleanupMessage(order:String) {
-			this.order = order;
+		public function OrderCleanupMessage(order:Array = null) {
+			this.orders = orders;
 		}
 	}
 }
