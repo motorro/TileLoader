@@ -27,12 +27,20 @@ package tileloader.controller.tasks
 		private var _order:String;
 		
 		/**
+		 * @private
+		 * URL of authentication script. If null, no authentication check takes place. 
+		 */
+		private var _authenticationUrl:String;
+		
+		/**
 		 * Constructor 
 		 * @param order Order ID
+		 * @param authenticationScriptURL URL of authentication script. If ommited, no authentication check takes place.
 		 */
-		public function AuthenticateTask(order:String) {
+		public function AuthenticateTask(order:String, authenticationScriptURL:String = null) {
 			super();
 			_order = order;
+			_authenticationUrl = authenticationScriptURL;
 			
 			setCancelable(false);
 			setSkippable(false);

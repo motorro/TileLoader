@@ -22,11 +22,6 @@ package tileloader.model
 		public var authURL:String;
 		
 		/**
-		 * Album list URL 
-		 */
-		public var albumListURL:String;
-		
-		/**
 		 * Target image format config URL 
 		 */
 		public var imageFormatConfigURL:String;

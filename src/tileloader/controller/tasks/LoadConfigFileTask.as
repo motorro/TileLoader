@@ -74,7 +74,6 @@ package tileloader.controller.tasks
 					var setupData:XMLList = content.TileLoader;
 					
 					appConfig.authURL = StringUtil.trim(setupData.authURL.toString());
-					appConfig.albumListURL = StringUtil.trim(setupData.albumListURL.toString());
 					appConfig.imageFormatConfigURL = StringUtil.trim(setupData.imageFormatConfigURL.toString());
 					appConfig.imageUploadURL = StringUtil.trim(setupData.imageUploadURL.toString());
 					

@@ -9,6 +9,7 @@ package tileloader.controller
 	import tileloader.controller.tasks.AuthenticateTask;
 	import tileloader.controller.tasks.CreateOrderFolderTask;
 	import tileloader.messages.AuthenticateMessage;
+	import tileloader.model.ApplicationConfig;
 	import tileloader.model.AuthenticationModel;
 	import tileloader.model.GlobalConstants;
 
@@ -27,6 +28,13 @@ package tileloader.controller
 		 */
 		public var model:AuthenticationModel;
 		
+		[Inject]
+		/**
+		 * @private
+		 * Reference to configuration 
+		 */
+		public var config:ApplicationConfig;
+		
 		/**
 		 * Authenticates order that is passed in message 
 		 */
@@ -35,10 +43,10 @@ package tileloader.controller
 			var result:TaskGroup = new SequentialTaskGroup("Order authentication");	
 			result.data = model;
 			
-			//TODO: Order authentication check code here?
+			//Check passed token is correct and authenticate it
+			result.addTask(new AuthenticateTask(message.order, config.authURL));
 			
-			result.addTask(new AuthenticateTask(message.order));
-			
+			//Create order temp folder
 			var baseFolder:File = File.applicationStorageDirectory;
 			result.addTask(new CreateOrderFolderTask(baseFolder));
 			
