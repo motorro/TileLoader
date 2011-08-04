@@ -14,7 +14,7 @@ package tileloader.model
 	import tileloader.messages.AuthenticateMessage;
 	import tileloader.messages.ConfigResultMessage;
 	import tileloader.messages.ExitMessage;
-	import tileloader.messages.ExitMessages;
+	import tileloader.messages.MessageCodes;
 	import tileloader.messages.OrderCleanupMessage;
 
 	/**
@@ -44,6 +44,11 @@ package tileloader.model
 		 * Order temporary directory 
 		 */
 		public var orderDirectory:File;
+		
+		/**
+		 * Arbitrary order data 
+		 */
+		public var orderData:XML;
 		
 	}
 }

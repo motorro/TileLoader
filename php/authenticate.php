@@ -6,9 +6,9 @@
  *********************************************************/ 
 
 define ('STATUS_OK', 0);
-define ('STATUS_ERROR', 100);
-define ('STATUS_ERROR_EMPTY_TOKEN', STATUS_ERROR + 10); 
-define ('STATUS_ERROR_INVALID_TOKEN', STATUS_ERROR + 20); 
+define ('STATUS_ERROR', 1000);
+define ('STATUS_ERROR_EMPTY_TOKEN', STATUS_ERROR + 110); 
+define ('STATUS_ERROR_INVALID_TOKEN', STATUS_ERROR + 120); 
  
 $token = isset($_POST["token"]) ? $_POST["token"] : "";
 if ("" == $token) {
@@ -20,7 +20,7 @@ if ("BadOne" == $token) {
 	result("Error", STATUS_ERROR_INVALID_TOKEN, "Invalid token");
 }
 
-result("Ok", STATUS_OK, "Authorized", "<order><name>Альбом $token</name></order>");
+result("Ok", STATUS_OK, "Authorized", "<order><token>$token</token><name>Альбом $token</name></order>");
 
 function result($status, $code, $message, $xmlData = null) {
 	header ("Content-type: text/xml; charset=utf-8");

@@ -17,7 +17,7 @@ package tileloader.controller
 	import tileloader.messages.ConfigMessage;
 	import tileloader.messages.ConfigResultMessage;
 	import tileloader.messages.ExitMessage;
-	import tileloader.messages.ExitMessages;
+	import tileloader.messages.MessageCodes;
 	import tileloader.messages.FileAddMessage;
 	import tileloader.messages.OrderCleanupMessage;
 	import tileloader.messages.RescanFileQueueMessage;
@@ -144,7 +144,7 @@ package tileloader.controller
 			var listener:Function = function(event:CloseEvent):void {
 				if (null == event || Alert.OK == event.detail) {
 					//TODO: Log output
-					sendMessage(new ExitMessage(ExitMessages.CONFIG_ERROR));
+					sendMessage(new ExitMessage(MessageCodes.CONFIG_ERROR));
 					return;
 				} 
 			}
@@ -183,7 +183,7 @@ package tileloader.controller
 			var listener:Function = function(event:CloseEvent):void {
 				if (null == event || Alert.NO == event.detail) {
 					//TODO: Log output
-					sendMessage(new ExitMessage(ExitMessages.DISK_OPERATION_ERROR));
+					sendMessage(new ExitMessage(MessageCodes.DISK_OPERATION_ERROR));
 					return;
 				} else {
 					sendMessage(message);
@@ -221,7 +221,7 @@ package tileloader.controller
 			var listener:Function = function(event:CloseEvent):void {
 				if (null == event || Alert.NO == event.detail) {
 					//TODO: Log output
-					sendMessage(new ExitMessage(ExitMessages.CONFIG_ERROR));
+					sendMessage(new ExitMessage(MessageCodes.CONFIG_ERROR));
 					return;
 				} else {
 					sendMessage(message);
@@ -271,7 +271,7 @@ package tileloader.controller
 			var listener:Function = function(event:CloseEvent):void {
 				if (null == event || Alert.NO == event.detail) {
 					//TODO: Log output
-					sendMessage(new ExitMessage(ExitMessages.DISK_OPERATION_ERROR));
+					sendMessage(new ExitMessage(MessageCodes.DISK_OPERATION_ERROR));
 					return;
 				} else {
 					sendMessage(message);
@@ -335,7 +335,7 @@ package tileloader.controller
 			var listener:Function = function(event:CloseEvent):void {
 				if (null == event || Alert.NO == event.detail) {
 					//TODO: Log output
-					sendMessage(new ExitMessage(ExitMessages.NETWORK_ERROR));
+					sendMessage(new ExitMessage(MessageCodes.NETWORK_ERROR));
 					return;
 				} else {
 					sendMessage(message);

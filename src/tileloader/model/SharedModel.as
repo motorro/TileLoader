@@ -18,7 +18,7 @@ package tileloader.model
 	import tileloader.messages.ConfigMessage;
 	import tileloader.messages.ConfigResultMessage;
 	import tileloader.messages.ExitMessage;
-	import tileloader.messages.ExitMessages;
+	import tileloader.messages.MessageCodes;
 	import tileloader.messages.FileAddMessage;
 	import tileloader.messages.OrderCleanupMessage;
 	import tileloader.messages.RescanFileQueueMessage;
