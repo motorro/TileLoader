@@ -13,11 +13,13 @@ define ('STATUS_ERROR_INVALID_TOKEN', STATUS_ERROR + 120);
 $token = isset($_POST["token"]) ? $_POST["token"] : "";
 if ("" == $token) {
 	result("Error", STATUS_ERROR_EMPTY_TOKEN, "Empty token.");
+	exit();
 } 
 
 //Authorization error test
 if ("BadOne" == $token) {
 	result("Error", STATUS_ERROR_INVALID_TOKEN, "Invalid token");
+	exit();
 }
 
 result("Ok", STATUS_OK, "Authorized", "<order><token>$token</token><name>Альбом $token</name></order>");

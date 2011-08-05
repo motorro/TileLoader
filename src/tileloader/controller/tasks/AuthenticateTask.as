@@ -130,7 +130,7 @@ package tileloader.controller.tasks
 				
 				//Check for success
 				if (MessageCodes.NO_ERROR != int(opResult)) {
-					throw(new Error("Authorization error: " + data.message.toString(), int(opResult)));
+					throw(new Error("Authorization error: " + responseData.message.toString(), int(opResult)));
 				}
 				
 				//Check for correct order data received
