@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextFlow xmlns="http://ns.adobe.com/textLayout/2008" whiteSpaceCollapse="preserve">
+    <p>Please enter your album token into the <span fontWeight="bold">Token</span> field to proceed...</p>
+</TextFlow>

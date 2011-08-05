@@ -6,11 +6,6 @@
 				http://photogrid.photocafe.ru/auth.php			
 			]]>
 		</authURL>
-		<albumListURL>
-			<![CDATA[
-				http://photogrid.photocafe.ru/albumList.php			
-			]]>
-		</albumListURL>
 		<imageFormatConfigURL>
 			<![CDATA[
 				http://photogrid.photocafe.ru/imageformats.xml			

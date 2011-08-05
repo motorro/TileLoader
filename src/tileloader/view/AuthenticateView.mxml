@@ -35,4 +35,5 @@
 			]]>
 		</s:click>
 	</s:Button>
+	<s:RichText id="tMessage" textFlow="{model.welcomeMessage}"/>
 </s:Group>

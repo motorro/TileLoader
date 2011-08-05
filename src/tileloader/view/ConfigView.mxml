@@ -30,5 +30,5 @@
 	<s:layout>
 		<s:HorizontalLayout/>
 	</s:layout>
-	<s:Label text="@Resource(key='lblConfigLoad', bundle='interface')"/>
+	<s:Label text="{resourceManager.getString('interface','lblConfigLoad')}"/>
 </s:Group>

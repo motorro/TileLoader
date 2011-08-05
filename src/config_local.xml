@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<TileLoader>
-		<WelcomePageURL>
-			<![CDATA[
-				http://tiles/welcomepage.html			
-			]]>
-		</WelcomePageURL>
 		<authURL>
 			<![CDATA[
 				http://tiles/authenticate.php			
