@@ -199,43 +199,6 @@ package tileloader.controller
 			Alert.show(rm.getString("messages", "removeFolderError", [fault.text]), rm.getString("messages", 'removeFolderErrorTitle'), Alert.YES | Alert.NO, null, listener);
 		}
 
-		[CommandComplete]
-		/**
-		 * @private 
-		 * Authenticate complete handler
-		 */
-		public function onAuthComplete(message:AuthenticateMessage):void {
-			if (null != _logger) {
-				_logger.info("Authentication complete for: " + message.order);
-			}
-			sendMessage(new AuthResultMessage(AuthResultMessage.AUTH_COMPLETE));
-			authenticationModel.authenticated = true;
-		}
-		
-		[CommandError]
-		/**
-		 * @private 
-		 * Authentication error
-		 */
-		public function onAuthError(fault:ErrorEvent, message:AuthenticateMessage):void {
-			var listener:Function = function(event:CloseEvent):void {
-				if (null == event || Alert.NO == event.detail) {
-					//TODO: Log output
-					sendMessage(new ExitMessage(MessageCodes.CONFIG_ERROR));
-					return;
-				} else {
-					sendMessage(message);
-				}
-			}
-			
-			if (null != _logger) {
-				_logger.error("Authenticate error: " + fault.text);
-			}
-			
-			var rm:IResourceManager = ResourceManager.getInstance();
-			
-			Alert.show(rm.getString("messages", "authenticationError", [fault.text]), rm.getString("messages", 'authenticationErrorTitle'), Alert.YES | Alert.NO, null, listener);
-		}
 		
 		[CommandComplete]
 		/**

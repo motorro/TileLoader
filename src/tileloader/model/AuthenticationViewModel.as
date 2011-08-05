@@ -1,5 +1,6 @@
 package tileloader.model
 {
+	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
@@ -9,13 +10,18 @@ package tileloader.model
 	import flashx.textLayout.conversion.TextConverter;
 	import flashx.textLayout.elements.TextFlow;
 	
+	import mx.controls.Alert;
+	import mx.events.CloseEvent;
 	import mx.logging.ILogger;
 	import mx.resources.IResourceManager;
 	import mx.resources.ResourceManager;
 	import mx.utils.StringUtil;
 	
 	import tileloader.log.LogUtils;
+	import tileloader.messages.AuthResultMessage;
 	import tileloader.messages.AuthenticateMessage;
+	import tileloader.messages.ExitMessage;
+	import tileloader.messages.MessageCodes;
 
 	[ResourceBundle("interface")]
 	/**
@@ -36,6 +42,13 @@ package tileloader.model
 		 * Loader for welcome page 
 		 */
 		private var _welcomeLoader:URLLoader;
+		
+		[Inject]
+		/**
+		 * @private
+		 * Authentication model reference 
+		 */
+		public var model:AuthenticationModel;
 		
 		[MessageDispatcher]
 		/**
@@ -97,6 +110,43 @@ package tileloader.model
 			
 			sendMessage(new AuthenticateMessage(token));
 		}
-
+		
+		[CommandComplete]
+		/**
+		 * @private 
+		 * Authenticate complete handler
+		 */
+		public function onAuthComplete(message:AuthenticateMessage):void {
+			if (null != _logger) {
+				_logger.info("Authentication complete for: " + message.order);
+			}
+			sendMessage(new AuthResultMessage(AuthResultMessage.AUTH_COMPLETE));
+			model.authenticated = true;
+		}
+		
+		[CommandError]
+		/**
+		 * @private 
+		 * Authentication error
+		 */
+		public function onAuthError(fault:ErrorEvent, message:AuthenticateMessage):void {
+//			var listener:Function = function(event:CloseEvent):void {
+//				if (null == event || Alert.NO == event.detail) {
+//					//TODO: Log output
+//					sendMessage(new ExitMessage(MessageCodes.CONFIG_ERROR));
+//					return;
+//				} else {
+//					sendMessage(message);
+//				}
+//			}
+			
+			if (null != _logger) {
+				_logger.error("Authenticate error: " + fault.text);
+			}
+			
+			var rm:IResourceManager = ResourceManager.getInstance();
+			
+			Alert.show(rm.getString("messages", "authenticationError", [fault.text]), rm.getString("messages", 'authenticationErrorTitle'), Alert.OK, null);
+		}
 	}
 }

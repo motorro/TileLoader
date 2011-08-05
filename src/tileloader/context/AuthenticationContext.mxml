@@ -5,10 +5,12 @@
 	xmlns:model="tileloader.model.*">
 	<fx:Script>
 		<![CDATA[
+			import tileloader.controller.AuthenticateCommand;
 			import tileloader.model.AuthenticationViewModel;
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<DynamicObject type="{AuthenticationViewModel}"/>
+		<DynamicCommand type="{AuthenticateCommand}" scope="local"/>
 	</fx:Declarations>
 </Objects>

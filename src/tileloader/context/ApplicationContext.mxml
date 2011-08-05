@@ -5,7 +5,6 @@
 	xmlns:model="tileloader.model.*" xmlns:controller="tileloader.controller.*">
 	<fx:Script>
 		<![CDATA[
-			import tileloader.controller.AuthenticateCommand;
 			import tileloader.controller.CheckForUpdatesCommand;
 			import tileloader.controller.ConfigCommand;
 			import tileloader.controller.ExitCommand;
@@ -36,7 +35,6 @@
 		<DynamicCommand	type="{ExitCommand}"/>
 		<DynamicCommand type="{FileAddCommand}"/>
 		<DynamicCommand type="{OrderCleanupCommand}"/>
-		<DynamicCommand type="{AuthenticateCommand}"/>
 		<DynamicCommand type="{RescanFileQueueCommand}"/>
 		<DynamicCommand type="{ResizeImageCommand}"/>
 		<DynamicCommand type="{StartUploadCommand}"/>
