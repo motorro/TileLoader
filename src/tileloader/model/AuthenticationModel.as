@@ -37,9 +37,6 @@ package tileloader.model
 		 */
 		public var orderToken:String;
 		
-		//FIXME: Temporary order token
-		public var tempToken:String = "NOT_SET"; 
-		
 		/**
 		 * Order temporary directory 
 		 */
