@@ -1,13 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
-	<versionNumber>0.4.1</versionNumber>
+	<versionNumber>0.4.2</versionNumber>
 	<url>http://www.motorro.com/tiles/TileLoader.air</url>
 	<description>
 		<![CDATA[
-			- EXIF lossless rotate
-			- EXIF Date is sent (exifDate param)
-			- Concurrent errors fix and reporting
-			- Resize optimization
+			- Token is checked on server before use
 		]]>
 	</description>
 </update>
