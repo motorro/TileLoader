@@ -18,8 +18,8 @@ package tileloader.model
 	import tileloader.messages.ConfigMessage;
 	import tileloader.messages.ConfigResultMessage;
 	import tileloader.messages.ExitMessage;
-	import tileloader.messages.MessageCodes;
 	import tileloader.messages.FileAddMessage;
+	import tileloader.messages.MessageCodes;
 	import tileloader.messages.OrderCleanupMessage;
 	import tileloader.messages.RescanFileQueueMessage;
 	import tileloader.messages.RescanUploadQueueMessage;
@@ -53,6 +53,11 @@ package tileloader.model
 		 * Application log
 		 */
 		public var applicationLog:Vector.<String>;
+		
+		/**
+		 * List of orders being processed
+		 */
+		public var currentOrders:Vector.<OrderModel>;
 		
 	}
 }
