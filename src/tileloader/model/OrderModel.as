@@ -7,11 +7,6 @@ package tileloader.model
 	 * 
 	 */
 	public class OrderModel {
-		[Inject]
-		/**
-		 * Reference to authentication data for this order 
-		 */
-		public var authenticationModel:AuthenticationModel;
 		
 		
 	}
