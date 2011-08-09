@@ -33,9 +33,14 @@ package tileloader.model
 		public var authenticated:Boolean; 
 		
 		/**
-		 * Order token that is provided from outside 
+		 * Token provided by user 
 		 */
-		public var orderToken:String;
+		public var userToken:String;
+
+		/**
+		 * Order token that is provided from server 
+		 */
+		public var serverToken:String;
 		
 		/**
 		 * Order temporary directory 

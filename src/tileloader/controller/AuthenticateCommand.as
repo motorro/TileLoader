@@ -44,7 +44,7 @@ package tileloader.controller
 			result.data = model;
 			
 			//Check passed token is correct and authenticate it
-			result.addTask(new AuthenticateTask(message.order, config.authURL));
+			result.addTask(new AuthenticateTask(message.token, config.authURL));
 			
 			//Create order temp folder
 			var baseFolder:File = File.applicationStorageDirectory;

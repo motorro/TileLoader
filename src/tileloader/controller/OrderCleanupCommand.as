@@ -11,6 +11,8 @@ package tileloader.controller
 	import tileloader.messages.OrderCleanupMessage;
 	import tileloader.model.AuthenticationModel;
 	import tileloader.model.GlobalConstants;
+	
+	import utils.MD5;
 
 	/**
 	 * Removes any temporary data for given order 
@@ -51,13 +53,12 @@ package tileloader.controller
 			} else {
 				i = message.orders.length;
 				while (--i >=0) {
-					file = File.applicationStorageDirectory.resolvePath(message.orders[i]);
+					file = File.applicationStorageDirectory.resolvePath(MD5.encrypt(message.orders[i]));
 					//Delete existing directories only
 					if (false == file.isDirectory) continue;
 					if (false == file.exists || false == file.isDirectory) continue;
 					result.addTask(new FolderCleanupTask(file));
 				}
-				result.addTask(new FolderCleanupTask(File.applicationStorageDirectory.resolvePath(model.orderToken)));
 			}
 			
 			result.addTask(new OrderDataCleanupTask());

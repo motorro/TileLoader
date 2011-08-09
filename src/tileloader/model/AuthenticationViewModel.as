@@ -118,7 +118,7 @@ package tileloader.model
 		 */
 		public function onAuthComplete(message:AuthenticateMessage):void {
 			if (null != _logger) {
-				_logger.info("Authentication complete for: " + message.order);
+				_logger.info("Authentication complete for: " + message.token);
 			}
 			sendMessage(new AuthResultMessage(AuthResultMessage.AUTH_COMPLETE));
 			model.authenticated = true;

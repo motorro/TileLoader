@@ -9,6 +9,8 @@ package tileloader.controller.tasks
 	import tileloader.log.LogUtils;
 	import tileloader.model.AuthenticationModel;
 	
+	import utils.MD5;
+	
 	/**
 	 * Creates order temp directory
 	 *  
@@ -47,7 +49,7 @@ package tileloader.controller.tasks
 		 */
 		override protected function doStart():void {
 			
-			var orderSubDir:String = AuthenticationModel(data).orderToken;
+			var orderSubDir:String = MD5.encrypt(AuthenticationModel(data).userToken);
 			
 			var dir:File = _baseFolder.resolvePath(orderSubDir);
 			

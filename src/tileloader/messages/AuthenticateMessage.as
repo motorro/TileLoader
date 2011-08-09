@@ -3,16 +3,16 @@ package tileloader.messages
 	public class AuthenticateMessage {
 		
 		/**
-		 * Order to make active 
+		 * Authentication token 
 		 */
-		public var order:String;
+		public var token:String;
 		
 		/**
 		 * Constructor 
-		 * @param order Order to make active
+		 * @param token Authentication token 
 		 */
-		public function AuthenticateMessage(order:String) {
-			this.order = order;
+		public function AuthenticateMessage(token:String) {
+			this.token = token;
 		}
 	}
 }

@@ -28,7 +28,7 @@ package tileloader.controller.tasks
 		override protected function doStart():void {
 			var model:AuthenticationModel = AuthenticationModel(data);
 			
-			model.orderToken = "";
+			model.serverToken = "";
 			model.orderDirectory = null;
 			
 			complete();

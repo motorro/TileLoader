@@ -41,7 +41,7 @@ package tileloader.controller.tasks
 		 * @private
 		 * Order ID storage 
 		 */
-		private var _order:String;
+		private var _token:String;
 		
 		/**
 		 * @private
@@ -57,12 +57,12 @@ package tileloader.controller.tasks
 		
 		/**
 		 * Constructor 
-		 * @param order Order ID
+		 * @param token User provided authentication token
 		 * @param authenticationScriptURL URL of authentication script. If ommited, no authentication check takes place.
 		 */
-		public function AuthenticateTask(order:String, authenticationScriptURL:String = null) {
+		public function AuthenticateTask(token:String, authenticationScriptURL:String = null) {
 			super();
-			_order = order;
+			_token = token;
 			_authenticationUrl = authenticationScriptURL;
 			
 			setCancelable(false);
@@ -76,15 +76,16 @@ package tileloader.controller.tasks
 		 */
 		override protected function doStart():void {
 			if (null != _logger) {
-				_logger.info("Authenticating order: " + _order);
+				_logger.info("Authenticating order: " + _token);
 			}
 			
 			_model = AuthenticationModel(data);
+			_model.userToken = _token;
 			
 			//Authorization shortcut
 			if (null == _authenticationUrl) {
 				_logger.warn("No authentication URL passed. Using shortcut.");
-				_model.orderToken = _order;
+				_model.serverToken = _token;
 				complete();
 				return;
 			}
@@ -93,7 +94,7 @@ package tileloader.controller.tasks
 			request.method = URLRequestMethod.POST;
 			
 			var requestVars:URLVariables = new URLVariables();
-			requestVars.token = _order;
+			requestVars.token = _token;
 			
 			request.data = requestVars;
 			
@@ -145,11 +146,11 @@ package tileloader.controller.tasks
 					throw (new Error("Invalid responce format. No order token.", MessageCodes.ERROR_AUTH_NO_TOKEN_RECEIVED));
 				}
 				
-				_model.orderToken = orderToken;
+				_model.serverToken = orderToken;
 				_model.orderData = orderData[0];
 				
 				if (null != _logger) {
-					_logger.info("Successfull server authorization for order: " + _order);
+					_logger.info("Successfull server authorization for order: " + _token);
 				}
 				
 				complete();

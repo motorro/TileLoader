@@ -66,7 +66,7 @@ package tileloader.controller
 			
 			//Add upload task for each image format
 			for each (var format:ImageFormatFileVO in image.formats) {
-				result.addTask(new ImageUploadTask(configModel.imageUploadURL, authenticationModel.orderToken, format));
+				result.addTask(new ImageUploadTask(configModel.imageUploadURL, authenticationModel.serverToken, format));
 			}
 			
 			//Remove file from temp directory and queue
