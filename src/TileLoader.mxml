@@ -108,10 +108,9 @@
 
 		<parsley:ContextBuilder>
 			<parsley:FlexConfig type="{ApplicationContext}"/>
+			<parsley:RuntimeConfig instances="{[logTarget]}"/>
 			<parsley:TaskCommandSupport/>                    
 		</parsley:ContextBuilder>
-		
-		<parsley:Configure targets="{[logTarget]}"/>
 		
 		<parsley:FastInject injectionComplete="run()">
 			<parsley:Inject property="configurationModel" type="{ApplicationConfig}"/>
