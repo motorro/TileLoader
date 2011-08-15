@@ -57,7 +57,7 @@ package tileloader.model
 		/**
 		 * List of orders being processed
 		 */
-		public var currentOrders:Vector.<OrderModel>;
+		public var currentOrders:Vector.<AuthenticationModel>;
 		
 	}
 }
