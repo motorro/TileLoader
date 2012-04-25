@@ -1,1 +1,19 @@
-TileLoader AIR 2.6 project
+TileLoader project
+
+A small Adobe AIR application used to upload images to web site using simple HTTP protocol.
+Photos are being resized and rotated according to EXIF data client-side according to server-set strategy.
+
+- PixelBender is used to resize images making resize fast and not freezing UI.
+- ExifInfo library is used to get EXIF data: http://code.shichiseki.jp/as3/ExifInfo/
+- Alchemy asynchronous JPEG encoder is used to encode JPG: http://segfaultlabs.com/devlogs/alchemy-asynchronous-jpeg-encoding-2
+
+Application is built using Parsley 2.4 Framework: http://www.spicefactory.org/parsley/
+
+The parent project for the application was terminated so it is not a release!
+Although but is a fully functioning version...
+
+
+
+
+
+
